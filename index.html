@@ -1,16 +1,63 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">
-	<meta name="author" content="Rafael Altar    - ra83021">  
-	<meta name="author" content="Vanesa Nakahara - ra83550">
-	<meta name="description" content="Trabalho desenvolvido para matéria de Computação Gráfica |UEM 2016 - Informática">
-	<title>Trabalho de Computação Gráfica</title>
-	<link rel="stylesheet" type="text/css" href="css/estilo.css">
-</head>
-<body>
-	<canvas id="board" width="500" height="350"></canvas>
-	<script type="text/javascript" src="js/easel.js"></script>
-	<script type="text/javascript" src="js/main.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="author" content="Rafael Altar    - ra83021">  
+        <meta name="author" content="Vanesa Nakahara - ra83550">
+        <meta name="description" content="Trabalho desenvolvido para matéria de Computação Gráfica |UEM 2016 - Informática">
+        <title>Trabalho de Computação Gráfica</title>
+        <link rel="stylesheet" type="text/css" href="css/estilo.css">
+    </head>
+    <body>  
+        <div class="container"> 
+            <div class="header">
+<!--             Computação Gráfica 2017 - Informática 
+                 Rafael Lucas     ra.:83021 
+                 Vanessa Nakahara ra.:83021 -->
+            </div>
+            <div class="top-menu">
+                <button class="btn btn-menu">
+                    Clear
+                </button>
+                <button class="btn btn-menu">
+                    Rotação
+                </button>
+                <button class="btn btn-menu">
+                    M.Escala
+                </button>
+                <button class="btn btn-menu">
+                    Translação
+                </button>
+                <button class="btn btn-menu">
+                    Zoom-Extend
+                </button>
+            </div>
+
+            <div class="left-menu">
+                <ul>
+                    <li>
+                        <button class="btn btn-menu">
+                            Line
+                        </button>
+                    </li>
+                    <li>
+                        <button class="btn btn-menu">
+                            Square
+                        </button>
+                    </li>
+                    <li>
+                        <button class="btn btn-menu">
+                            Triangle
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="right-panel">
+                <canvas id="board" width="500" height="350"></canvas>
+                <script type="text/javascript" src="js/easel.js"></script>
+                <script type="text/javascript" src="js/main.js"></script>
+            </div>
+        </div>
+    </body>
 </html>

@@ -1,3 +1,59 @@
+body{
 
-canvas { border: 1px solid black; }
-    
+    height: 100%;
+}
+
+
+ul li{
+    list-style: none;
+}
+
+.left-menu{
+    margin-right: 10px;
+}
+
+.btn{
+    padding: 15px;
+    background: white;
+    border: cadetblue solid thin;
+    border-radius: 5%;
+    width: 110px;
+}
+
+.left-menu .btn-menu{
+    margin-bottom: 10px;
+}
+
+.top-menu .btn-menu{
+    font-size: 80%;
+    margin-right: 13px;
+}
+
+.right-panel{
+    margin-top:18px;
+
+}
+
+.top-menu{
+    margin-left:5%;
+}
+
+.container{
+    width: 800px;
+    clear: both;
+    margin: 0 auto;
+}
+
+.left-menu{
+    float:left;
+}
+
+
+.right-panel{
+    float: rigth;
+}
+
+canvas {
+    border: 1px solid black; 
+    border-radius: 2%;
+}
