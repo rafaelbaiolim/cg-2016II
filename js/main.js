@@ -1,17 +1,23 @@
-var drawType = "QUADRADO";
+var drawType;
 var canvas;
 var ctx;
 var elements = [];
 var coordAtual = {x: 0, y: 0}
 var pontos = [];
 var draws = [];
+var lastIdAtivo = "";
 
 window.onload = function () {
     construct();
     addListners();
 }
 
-function setDrawType(drawTp) {
+function removeActiveClass(idElemento) {
+    var oldClass = document.getElementById(idElemento).className.replace(" ativo", '');
+    document.getElementById(idElemento).className = oldClass;
+}
+
+function setDrawType(drawTp, idElemento) {
     switch (drawTp) {
         case "LINHA":
             drawType = "LINHA";
@@ -19,8 +25,8 @@ function setDrawType(drawTp) {
         case "TRIANGULO":
             drawType = "TRIANGULO";
             break;
-        case "QUADRADO":
-            drawType = "QUADRADO";
+        case "RETANGULO":
+            drawType = "RETANGULO";
             break;
         case "CIRCULO":
             drawType = "CIRCULO";
@@ -29,15 +35,18 @@ function setDrawType(drawTp) {
             drawType = "LINHA";
             break;
     }
-
+    removeActiveClass("tipoLinha");
+    removeActiveClass("tipoRetangulo");
+    removeActiveClass("tipoTriangulo");
+    document.getElementById(idElemento).className += " ativo";
+    resetPontos();
 }
 
 function construct() {
     canvas = document.getElementById('board');
     ctx = canvas.getContext('2d');
-
-
-
+    document.onkeydown = KeyPress;
+    setDrawType("LINHA", 'tipoLinha');
 //    for (var j = 10; j < 500; j += 22) {
 //        for (var i = 10; i < 500; i += 20) {
 //            var c1 = new Circle({x: i, y: j, radius: 6, fill: "blue"}).draw();
@@ -82,95 +91,205 @@ function addListners() {
 
     canvas.addEventListener('mousedown', function (evt) {
         addDotToCanvas();
-        var obj = checkColision();
-
+        //var obj = checkColision();
         if (drawType == "LINHA") {
             if (pontos.length == 2) {
                 var linha = new Line({
                     xO: pontos[0].posX,
                     yO: pontos[0].posY,
                     xD: pontos[1].posX,
-                    yD: pontos[1].posY
+                    yD: pontos[1].posY,
+                    dots: pontos
                 }).draw();
                 resetPontos();
                 draws.push(linha);
             }
         }
 
-        if (drawType == "QUADRADO") {
-            createSquare();
+        if (drawType == "RETANGULO") {
+            if (pontos.length >= 2) {
+                var retangulo = new Rectangle({p0: pontos[0],
+                    p1: pontos[1], dots: pontos}).draw();
+                resetPontos();
+                draws.push(retangulo);
+            }
         }
 
-    });
-
-
-    canvas.addEventListener('mouseup', function (evt) {
-
-        if (drawType == "QUADRADO") {
-            addDotToCanvas();
-            createSquare();
+        if (drawType == "TRIANGULO") {
+            if (pontos.length >= 2) {
+                var retangulo = new Triangle({p0: pontos[0],
+                    p1: pontos[1], dots: pontos}).draw();
+                resetPontos();
+                draws.push(retangulo);
+            }
         }
-    });
+
+    }
+    );
+
+
+//    canvas.addEventListener('mouseup', function (evt) {
+//
+//        if (drawType == "QUADRADO") {
+//            addDotToCanvas();
+//            createSquare();
+//        }
+//    });
 }
 
-function createSquare() {
-    if (pontos.length >= 2) {
-
-        var linha1 = new Line({
-            xO: pontos[0].posX,
-            yO: pontos[0].posY,
-            xD: pontos[1].posX,
-            yD: pontos[0].posY
-        }).draw();
-
-        var linha2 = new Line({
-            xO: linha1.posXD,
-            yO: linha1.posYD,
-            xD: pontos[1].posX,
-            yD: pontos[1].posY
-        }).draw();
-
-
-        var linha2 = new Line({
-            xO: linha1.posXD,
-            yO: linha1.posYD,
-            xD: pontos[1].posX,
-            yD: pontos[1].posY
-        }).draw();
-
-        var linha3 = new Line({
-            xO: pontos[0].posX,
-            yO: pontos[0].posY,
-            xD: pontos[0].posX,
-            yD: pontos[1].posY
-        }).draw();
-
-
-        var linha4 = new Line({
-            xO: linha3.posXD,
-            yO: linha3.posYD,
-            xD: pontos[1].posX,
-            yD: pontos[1].posY
-        }).draw();
-
+/**
+ * Remove o ultimo elemento utilizando ctrl+z
+ * @param {type} e
+ * @returns {undefined}
+ */
+function KeyPress(e) {
+    var evtobj = window.event ? event : e
+    if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
+        removeLastObj();
         resetPontos();
-        // draws.push(linha);
+    }
+}
+
+function removeLastObj() {
+    draws.pop();
+    clearCanvas();
+    for (var i in draws) {
+        draws[i].props.drawDots = true
+        switch (draws[i].type) {
+            case "LINHA":
+                new Line(draws[i].props).draw();
+                break;
+            case "RETANGULO":
+                new Rectangle(draws[i].props).draw();
+                break;
+        }
+    }
+}
+
+function Triangle(props) {
+    this.obj = {};
+    this.obj.type = "RETANGULO";
+    this.linhas = {};
+    this.obj.linhas = [];
+    this.obj.props = props;
+
+    if (props.drawDots) {
+        addDotToCanvas(props.p0.posX, props.p0.posY);
+        addDotToCanvas(props.p1.posX, props.p1.posY);
+    }
+
+    this.linha1 = new Line({
+        xO: props.p0.posX,
+        yO: props.p0.posY,
+        xD: props.p1.posX,
+        yD: props.p0.posY
+    }).draw();
+    this.obj.linhas.push(this.linha1);
+
+    addDotToCanvas(this.linha1.posXD, this.linha1.posYD);
+    this.linha2 = new Line({
+        xO: this.linha1.posXD,
+        yO: this.linha1.posYD,
+        xD: props.p1.posX,
+        yD: props.p1.posY
+    }).draw();
+    this.obj.linhas.push(this.linha2);
+
+    addDotToCanvas(props.p0.posX, props.p1.posY);
+    this.linha3 = new Line({
+        xO: props.p0.posX,
+        yO: props.p0.posY,
+        xD: props.p0.posX,
+        yD: props.p1.posY
+    }).draw();
+    this.obj.linhas.push(this.linha3);
+
+    this.linha4 = new Line({
+        xO: this.linha3.posXD,
+        yO: this.linha3.posYD,
+        xD: props.p1.posX,
+        yD: props.p1.posY
+    }).draw();
+    this.obj.linhas.push(this.linha4);
+
+    this.draw = function () {
+        return this.obj;
+    }
+}
+
+function Rectangle(props) {
+
+    this.obj = {};
+    this.obj.type = "RETANGULO";
+    this.linhas = {};
+    this.obj.linhas = [];
+    this.obj.props = props;
+
+    if (props.drawDots) {
+        addDotToCanvas(props.p0.posX, props.p0.posY);
+        addDotToCanvas(props.p1.posX, props.p1.posY);
+    }
+
+    this.linha1 = new Line({
+        xO: props.p0.posX,
+        yO: props.p0.posY,
+        xD: props.p1.posX,
+        yD: props.p0.posY
+    }).draw();
+    this.obj.linhas.push(this.linha1);
+
+    addDotToCanvas(this.linha1.posXD, this.linha1.posYD);
+    this.linha2 = new Line({
+        xO: this.linha1.posXD,
+        yO: this.linha1.posYD,
+        xD: props.p1.posX,
+        yD: props.p1.posY
+    }).draw();
+    this.obj.linhas.push(this.linha2);
+
+    addDotToCanvas(props.p0.posX, props.p1.posY);
+    this.linha3 = new Line({
+        xO: props.p0.posX,
+        yO: props.p0.posY,
+        xD: props.p0.posX,
+        yD: props.p1.posY
+    }).draw();
+    this.obj.linhas.push(this.linha3);
+
+    this.linha4 = new Line({
+        xO: this.linha3.posXD,
+        yO: this.linha3.posYD,
+        xD: props.p1.posX,
+        yD: props.p1.posY
+    }).draw();
+    this.obj.linhas.push(this.linha4);
+
+    this.draw = function () {
+        return this.obj;
     }
 }
 
 
+
+
 function clearCanvas() {
-
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
 
 }
 
-function addDotToCanvas() {
+function addDotToCanvas(coordX, coordY) {
+
+    if (!coordX) {
+        coordX = coordAtual.x;
+    }
+
+    if (!coordY) {
+        coordY = coordAtual.y;
+    }
+
     var ponto = new Circle({
-        x: coordAtual.x,
-        y: coordAtual.y,
+        x: coordX,
+        y: coordY,
         radius: 5,
         fill: "#000000",
     }).draw();
@@ -181,9 +300,17 @@ function addDotToCanvas() {
 
 
 function Line(props) {
-
     this.obj = {};
+    this.obj.type = "LINHA";
+    this.obj.props = props;
+
     try {
+
+        if (props.drawDots) {
+            addDotToCanvas(props.xO, props.yO);
+            addDotToCanvas(props.xD, props.yD);
+
+        }
 
         this.obj.posXO = props.xO;
         this.obj.posYO = props.yO;

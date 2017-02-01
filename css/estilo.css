@@ -71,3 +71,9 @@ canvas {
 #coord-x{
     width: 100%;
 }
+
+.ativo{
+    background: #7DC265 !important;
+    color: white;
+
+}

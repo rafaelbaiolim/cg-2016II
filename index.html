@@ -36,17 +36,17 @@
             <div class="left-menu">
                 <ul>
                     <li>
-                        <button class="btn btn-menu" onclick="setDrawType('LINHA')">
+                        <button id="tipoLinha" class="btn btn-menu" onclick="setDrawType('LINHA','tipoLinha')">
                             Line
                         </button>
                     </li>
                     <li>
-                        <button class="btn btn-menu" onclick="setDrawType('QUADRADO')">
-                            Square
+                        <button id="tipoRetangulo" class="btn btn-menu" onclick="setDrawType('RETANGULO','tipoRetangulo')">
+                            Rectangle
                         </button>
                     </li>
                     <li>
-                        <button class="btn btn-menu" onclick="setDrawType('TRIANGULO')">
+                        <button id="tipoTriangulo" class="btn btn-menu" onclick="setDrawType('TRIANGULO','tipoTriangulo')">
                             Triangle
                         </button>
                     </li>
@@ -63,12 +63,15 @@
                     </li>
                 </ul>
             </div>
-
             <div class="right-panel">
                 <canvas id="board" width="500" height="350"></canvas>
                 <!--<script type="text/javascript" src="js/easel.js"></script>-->
                 <script type="text/javascript" src="js/main.js"></script>
+                <center>
+                    <small> Utilize "ctrl + z" para desfazer a última alteração. </small>
+                </center>
             </div>
+
         </div>
     </body>
 </html>
