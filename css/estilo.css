@@ -18,6 +18,7 @@ ul li{
     border: cadetblue solid thin;
     border-radius: 5%;
     width: 110px;
+    cursor: pointer;
 }
 
 .left-menu .btn-menu{
