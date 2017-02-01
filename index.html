@@ -11,12 +11,12 @@
     <body>  
         <div class="container"> 
             <div class="header">
-<!--             Computação Gráfica 2017 - Informática 
-                 Rafael Lucas     ra.:83021 
-                 Vanessa Nakahara ra.:83021 -->
+                <!--             Computação Gráfica 2017 - Informática 
+                                 Rafael Lucas     ra.:83021 
+                                 Vanessa Nakahara ra.:83021 -->
             </div>
             <div class="top-menu">
-                <button class="btn btn-menu">
+                <button class="btn btn-menu" onclick="clearCanvas()">
                     Clear
                 </button>
                 <button class="btn btn-menu">
@@ -36,26 +36,37 @@
             <div class="left-menu">
                 <ul>
                     <li>
-                        <button class="btn btn-menu">
+                        <button class="btn btn-menu" onclick="setDrawType('LINHA')">
                             Line
                         </button>
                     </li>
                     <li>
-                        <button class="btn btn-menu">
+                        <button class="btn btn-menu" onclick="setDrawType('QUADRADO')">
                             Square
                         </button>
                     </li>
                     <li>
-                        <button class="btn btn-menu">
+                        <button class="btn btn-menu" onclick="setDrawType('TRIANGULO')">
                             Triangle
                         </button>
+                    </li>
+                    <li>
+                        <div class="coord-wrap">
+                            <small> Posição Atual </small>
+                        </div>
+                        <div class="coord-wrap">
+                            <input disabled id="coord-x" placeholder="x"/>
+                        </div>
+                        <div class="coord-wrap">
+                            <input disabled id="coord-y" placeholder="y"/>
+                        </div>
                     </li>
                 </ul>
             </div>
 
             <div class="right-panel">
                 <canvas id="board" width="500" height="350"></canvas>
-                <script type="text/javascript" src="js/easel.js"></script>
+                <!--<script type="text/javascript" src="js/easel.js"></script>-->
                 <script type="text/javascript" src="js/main.js"></script>
             </div>
         </div>

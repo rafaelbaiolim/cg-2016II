@@ -55,5 +55,19 @@ ul li{
 
 canvas {
     border: 1px solid black; 
-    border-radius: 2%;
+    /*border-radius: 2%;*/
+}
+
+.coord-wrap{
+    width: 100px;
+}
+
+
+#coord-y{
+    width: 100%;
+    margin-top: 10px;
+}
+
+#coord-x{
+    width: 100%;
 }
