@@ -14,11 +14,23 @@ function multiplyMatrices(m1, m2) {
 }
 
 
-var m1 = [[1, 2], [3, 4]];
-var m2 = [[5, 6], [7, 8]];
+function transladarObjetos(dx, dy, mObj) {
+    var mT = [
+        [1, 0, dx],
+        [0, 1, dy],
+        [0, 0, 1]
+    ];
+    var result = multiplyMatrices(mT, mObj);
+    clearCanvas();
+    addDotToCanvas(result[0][0],result[0][1]);
+    addDotToCanvas(result[2][0],result[2][1]);
 
-
-function transladarObjetos() {
-    var mResult = multiplyMatrices(m1, m2)
-    console.log(mResult);
+    var retangulo = new Rectangle(
+            {
+                p0: pontos[0],
+                p1: pontos[1],
+            }).draw();
+    resetPontos();
+    draws.push(retangulo);
+    console.table(result);
 }

@@ -7,6 +7,8 @@ var pontos = [];
 var draws = [];
 var lastIdAtivo = "";
 
+var btnCalcularTranslacao;
+
 window.onload = function () {
     construct();
     addListners();
@@ -42,12 +44,23 @@ function setDrawType(drawTp, idElemento) {
     resetPontos();
 }
 
+function fixYAbs() {
+    ctx.transform(1, 0, 0, -1, 0, canvas.height);
+}
+
+function defaultYAbs() {
+    ctx.transform(1, 1, 0, 1, 0, 0);
+}
+
 function construct() {
     canvas = document.getElementById('board');
     ctx = canvas.getContext('2d');
-    ctx.transform(1, 0, 0, -1, 0, canvas.height);
+    fixYAbs();
     document.onkeydown = KeyPress;
     setDrawType("LINHA", 'tipoLinha');
+    btnCalcularTranslacao = document.getElementById("calcTranslacao");
+
+
 //    for (var j = 10; j < 500; j += 22) {
 //        for (var i = 10; i < 500; i += 20) {
 //            var c1 = new Circle({x: i, y: j, radius: 6, fill: "blue"}).draw();
@@ -82,8 +95,13 @@ function checkColision() {
     }
 }
 
-
 function addListners() {
+
+    btnCalcularTranslacao.addEventListener("click", function () {
+        transladarObjetos(1, 0, draws[0].matriz);
+    });
+
+
     canvas.addEventListener('mousemove', function (evt) {
         var mousePos = getMousePos(evt);
         coordAtual = {x: mousePos.x, y: mousePos.y};
@@ -109,8 +127,11 @@ function addListners() {
 
         if (drawType == "RETANGULO") {
             if (pontos.length >= 2) {
-                var retangulo = new Rectangle({p0: pontos[0],
-                    p1: pontos[1], dots: pontos}).draw();
+                var retangulo = new Rectangle(
+                        {
+                            p0: pontos[0],
+                            p1: pontos[1],
+                        }).draw();
                 resetPontos();
                 draws.push(retangulo);
             }
@@ -157,56 +178,57 @@ function removeLastObj() {
     }
 }
 
-function Triangle(props) {
-    this.obj = {};
-    this.obj.type = "RETANGULO";
-    this.linhas = {};
-    this.obj.linhas = [];
-    this.obj.props = props;
-
-    if (props.drawDots) {
-        addDotToCanvas(props.p0.posX, props.p0.posY);
-        addDotToCanvas(props.p1.posX, props.p1.posY);
-    }
-
-    this.linha1 = new Line({
-        xO: props.p0.posX,
-        yO: props.p0.posY,
-        xD: props.p1.posX,
-        yD: props.p0.posY
-    }).draw();
-    this.obj.linhas.push(this.linha1);
-
-    addDotToCanvas(this.linha1.posXD, this.linha1.posYD);
-    this.linha2 = new Line({
-        xO: this.linha1.posXD,
-        yO: this.linha1.posYD,
-        xD: props.p1.posX,
-        yD: props.p1.posY
-    }).draw();
-    this.obj.linhas.push(this.linha2);
-
-    addDotToCanvas(props.p0.posX, props.p1.posY);
-    this.linha3 = new Line({
-        xO: props.p0.posX,
-        yO: props.p0.posY,
-        xD: props.p0.posX,
-        yD: props.p1.posY
-    }).draw();
-    this.obj.linhas.push(this.linha3);
-
-    this.linha4 = new Line({
-        xO: this.linha3.posXD,
-        yO: this.linha3.posYD,
-        xD: props.p1.posX,
-        yD: props.p1.posY
-    }).draw();
-    this.obj.linhas.push(this.linha4);
-
-    this.draw = function () {
-        return this.obj;
-    }
-}
+//function Triangle(props) {
+//    this.obj = {};
+//    this.obj.type = "RETANGULO";
+//    this.linhas = {};
+//    this.obj.linhas = [];
+//    this.obj.props = props;
+//
+//
+//    if (props.drawDots) {
+//        addDotToCanvas(props.p0.posX, props.p0.posY);
+//        addDotToCanvas(props.p1.posX, props.p1.posY);
+//    }
+//
+//    this.linha1 = new Line({
+//        xO: props.p0.posX,
+//        yO: props.p0.posY,
+//        xD: props.p1.posX,
+//        yD: props.p0.posY
+//    }).draw();
+//    this.obj.linhas.push(this.linha1);
+//
+//    addDotToCanvas(this.linha1.posXD, this.linha1.posYD);
+//    this.linha2 = new Line({
+//        xO: this.linha1.posXD,
+//        yO: this.linha1.posYD,
+//        xD: props.p1.posX,
+//        yD: props.p1.posY
+//    }).draw();
+//    this.obj.linhas.push(this.linha2);
+//
+//    addDotToCanvas(props.p0.posX, props.p1.posY);
+//    this.linha3 = new Line({
+//        xO: props.p0.posX,
+//        yO: props.p0.posY,
+//        xD: props.p0.posX,
+//        yD: props.p1.posY
+//    }).draw();
+//    this.obj.linhas.push(this.linha3);
+//
+//    this.linha4 = new Line({
+//        xO: this.linha3.posXD,
+//        yO: this.linha3.posYD,
+//        xD: props.p1.posX,
+//        yD: props.p1.posY
+//    }).draw();
+//    this.obj.linhas.push(this.linha4);
+//
+//    this.draw = function () {
+//        return this.obj;
+//    }
+//}
 
 function Rectangle(props) {
 
@@ -214,6 +236,7 @@ function Rectangle(props) {
     this.obj.type = "RETANGULO";
     this.linhas = {};
     this.obj.linhas = [];
+    this.obj.matriz = [];
     this.obj.props = props;
 
     if (props.drawDots) {
@@ -227,6 +250,7 @@ function Rectangle(props) {
         xD: props.p1.posX,
         yD: props.p0.posY
     }).draw();
+
     this.obj.linhas.push(this.linha1);
 
     addDotToCanvas(this.linha1.posXD, this.linha1.posYD);
@@ -238,6 +262,7 @@ function Rectangle(props) {
     }).draw();
     this.obj.linhas.push(this.linha2);
 
+
     addDotToCanvas(props.p0.posX, props.p1.posY);
     this.linha3 = new Line({
         xO: props.p0.posX,
@@ -247,6 +272,7 @@ function Rectangle(props) {
     }).draw();
     this.obj.linhas.push(this.linha3);
 
+
     this.linha4 = new Line({
         xO: this.linha3.posXD,
         yO: this.linha3.posYD,
@@ -255,6 +281,13 @@ function Rectangle(props) {
     }).draw();
     this.obj.linhas.push(this.linha4);
 
+
+    this.obj.matriz.push([this.linha1.posXO, this.linha1.posYO, 1]);
+    this.obj.matriz.push([this.linha1.posXD, this.linha1.posYD, 1]);
+    this.obj.matriz.push([this.linha2.posXD, this.linha2.posYD, 1]);
+    this.obj.matriz.push([this.linha4.posXO, this.linha4.posYO, 1]);
+    console.table(this.obj.matriz);
+        
     this.draw = function () {
         return this.obj;
     }
@@ -383,6 +416,7 @@ function Circle(props) {
         ctx.arc(this.obj.posX,
                 this.obj.posY,
                 this.obj.radius, 0, 2 * Math.PI);
+        ctx.fillText("(" + this.obj.posX + "," + this.obj.posY + ")", this.obj.posX, this.obj.posY);
         ctx.fill();
         return this.obj;
     }
