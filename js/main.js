@@ -45,6 +45,7 @@ function setDrawType(drawTp, idElemento) {
 function construct() {
     canvas = document.getElementById('board');
     ctx = canvas.getContext('2d');
+    ctx.transform(1, 0, 0, -1, 0, canvas.height);
     document.onkeydown = KeyPress;
     setDrawType("LINHA", 'tipoLinha');
 //    for (var j = 10; j < 500; j += 22) {
@@ -55,11 +56,11 @@ function construct() {
     //stage.update();
 }
 
-function getMousePos(canvas, evt) {
+function getMousePos(evt) {
     var rect = canvas.getBoundingClientRect();
     return {
         x: evt.clientX - rect.left,
-        y: evt.clientY - rect.top
+        y: (evt.clientY - rect.bottom) * -1
     };
 }
 
@@ -84,7 +85,7 @@ function checkColision() {
 
 function addListners() {
     canvas.addEventListener('mousemove', function (evt) {
-        var mousePos = getMousePos(canvas, evt);
+        var mousePos = getMousePos(evt);
         coordAtual = {x: mousePos.x, y: mousePos.y};
         setMouseLabels();
     }, false);
@@ -124,17 +125,7 @@ function addListners() {
             }
         }
 
-    }
-    );
-
-
-//    canvas.addEventListener('mouseup', function (evt) {
-//
-//        if (drawType == "QUADRADO") {
-//            addDotToCanvas();
-//            createSquare();
-//        }
-//    });
+    });
 }
 
 /**
@@ -268,9 +259,6 @@ function Rectangle(props) {
         return this.obj;
     }
 }
-
-
-
 
 function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
