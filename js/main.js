@@ -98,7 +98,7 @@ function checkColision() {
 function addListners() {
 
     btnCalcularTranslacao.addEventListener("click", function () {
-        transladarObjetos(100, 100, draws[0].matriz, draws[0].type);
+        transladarObjetos(10, 10, draws[0].matriz, draws[0].type);
         
     });
 

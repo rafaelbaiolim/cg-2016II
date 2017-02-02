@@ -23,17 +23,17 @@ function transladarObjetos(dx, dy, mObj, tipo) {
         [0, 0, 1]
     ];
     var result = multiplyMatrices(mT, mObj);
-    
+    console.log(result);
     clearCanvas();
     if(tipo == "LINHA"){
-        addDotToCanvas(result[0][0],result[0][1]);
-        addDotToCanvas(result[1][0],result[1][1]);
+        addDotToCanvas(result[0][0],result[1][0]);
+        addDotToCanvas(result[0][1],result[1][1]);
         
         var linha = new Line({
-            xO: pontos[0],
-            yO: pontos[0],
-            xD: pontos[1],
-            yD: pontos[1],
+            xO: pontos[0].posX,
+            yO: pontos[0].posY,
+            xD: pontos[1].posX,
+            yD: pontos[1].posY,
             
         }).draw();
 
