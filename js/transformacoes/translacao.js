@@ -14,56 +14,48 @@ function multiplyMatrices(m1, m2) {
 }
 
 
-function multiplyMatrix(a, b) {
-    c = [];
- 
-    for (i = 0; i < a.length; i++) {
-        r = [];
-        for (j = 0; j < b[0].length; j++) {
-            s = 0;
-            for (k = 0; k < b.length; k++) {
-                s += a[i][k] * b[k][j];
-            }
-            r.push(s);
-        }
-        c.push(r);
-    }
-    return c;
-} 
 
-function transladarObjetos(dx, dy, mObj) {
-    console.log("dx: "+dx);
-    console.log("dy: "+dy);
+
+function transladarObjetos(dx, dy, mObj, tipo) {
     var mT = [
         [1, 0, dx],
         [0, 1, dy],
         [0, 0, 1]
     ];
-    var result = multiplyMatrix(mT, mObj);
+    var result = multiplyMatrices(mT, mObj);
     
-    console.log("wow");   
-    console.table(result);
-
-
     clearCanvas();
-       
-    console.log("x> "+result[0][0]);
-    console.log("y> "+result[1][0]);   
-    addDotToCanvas(result[0][0],result[1][0]);
+    if(tipo == "LINHA"){
+        addDotToCanvas(result[0][0],result[0][1]);
+        addDotToCanvas(result[1][0],result[1][1]);
+        
+        var linha = new Line({
+            xO: pontos[0],
+            yO: pontos[0],
+            xD: pontos[1],
+            yD: pontos[1],
+            
+        }).draw();
 
-    console.log("x2> "+result[0][2]);
-    console.log("y2> "+result[1][2]);
-    addDotToCanvas(result[0][2],result[1][2]);
+        resetPontos();
+        draws.push(linha);
+    }
+    if(tipo == "TRIANGULO"){}   
+    if(tipo == "RETANGULO"){   
+        addDotToCanvas(result[0][0],result[1][0]);
+        addDotToCanvas(result[0][2],result[1][2]);
 
-    var retangulo = new Rectangle(
-            {
-                p1: pontos[1],
-                p0: pontos[0],
-                
-            }).draw();
-    
-    resetPontos();
-    
-    draws.push(retangulo);
-    //console.table(result);
+        var retangulo = new Rectangle(
+                {
+                    p1: pontos[1],
+                    p0: pontos[0],
+                    
+                }).draw();
+        
+        resetPontos();
+        
+        draws.push(retangulo);
+        console.table(result);
+
+    }
 }

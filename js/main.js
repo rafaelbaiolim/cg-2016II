@@ -98,7 +98,8 @@ function checkColision() {
 function addListners() {
 
     btnCalcularTranslacao.addEventListener("click", function () {
-        transladarObjetos(100, 100, draws[0].matriz);
+        transladarObjetos(100, 100, draws[0].matriz, draws[0].type);
+        
     });
 
 
@@ -283,9 +284,7 @@ function Rectangle(props) {
 
 
     this.obj.matriz.push([this.linha1.posXO, this.linha1.posXD, this.linha2.posXD, this.linha4.posXO]);
-    
     this.obj.matriz.push([this.linha1.posYO, this.linha1.posYD, this.linha2.posYD, this.linha4.posYO]);
-
     this.obj.matriz.push([1, 1, 1, 1]);
 
     console.table(this.obj.matriz);
@@ -327,6 +326,8 @@ function addDotToCanvas(coordX, coordY) {
 function Line(props) {
     this.obj = {};
     this.obj.type = "LINHA";
+    this.obj.matriz = [];
+    
     this.obj.props = props;
 
     try {
@@ -351,11 +352,23 @@ function Line(props) {
     } catch (err) {
         console.log(err);
     }
+
+
+    this.obj.matriz.push([this.obj.posXO, this.obj.posXD]);
+    this.obj.matriz.push([this.obj.posYO, this.obj.posYD]);
+    this.obj.matriz.push([1, 1]);
+    
+    
+
+    console.table(this.obj.matriz);
+
     this.draw = function () {
         ctx.beginPath();
         ctx.moveTo(this.obj.posXO, this.obj.posYO);
         ctx.lineTo(this.obj.posXD, this.obj.posYD);
         ctx.stroke();
+        
+
         return this.obj;
     }
 }
