@@ -98,7 +98,7 @@ function checkColision() {
 function addListners() {
 
     btnCalcularTranslacao.addEventListener("click", function () {
-        transladarObjetos(1, 0, draws[0].matriz);
+        transladarObjetos(100, 100, draws[0].matriz);
     });
 
 
@@ -282,11 +282,15 @@ function Rectangle(props) {
     this.obj.linhas.push(this.linha4);
 
 
-    this.obj.matriz.push([this.linha1.posXO, this.linha1.posYO, 1]);
-    this.obj.matriz.push([this.linha1.posXD, this.linha1.posYD, 1]);
-    this.obj.matriz.push([this.linha2.posXD, this.linha2.posYD, 1]);
-    this.obj.matriz.push([this.linha4.posXO, this.linha4.posYO, 1]);
+    this.obj.matriz.push([this.linha1.posXO, this.linha1.posXD, this.linha2.posXD, this.linha4.posXO]);
+    
+    this.obj.matriz.push([this.linha1.posYO, this.linha1.posYD, this.linha2.posYD, this.linha4.posYO]);
+
+    this.obj.matriz.push([1, 1, 1, 1]);
+
     console.table(this.obj.matriz);
+
+    
         
     this.draw = function () {
         return this.obj;
