@@ -104,7 +104,7 @@ function addListners() {
         
     });
     btnCalcularMEscala.addEventListener("click", function () {
-        mEscala(10, 10, draws[0].matriz, draws[0].type);
+        mEscala(0, 2, draws[0].matriz, draws[0].type);
 
         
     });
