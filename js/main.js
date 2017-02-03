@@ -8,6 +8,7 @@ var draws = [];
 var lastIdAtivo = "";
 
 var btnCalcularTranslacao;
+var btnCalcularMEscala;
 
 window.onload = function () {
     construct();
@@ -58,8 +59,9 @@ function construct() {
     fixYAbs();
     document.onkeydown = KeyPress;
     setDrawType("LINHA", 'tipoLinha');
-    btnCalcularTranslacao = document.getElementById("calcTranslacao");
 
+    btnCalcularTranslacao = document.getElementById("calcTranslacao");
+    btnCalcularMEscala = document.getElementById("calcMEscala");
 
 //    for (var j = 10; j < 500; j += 22) {
 //        for (var i = 10; i < 500; i += 20) {
@@ -97,8 +99,12 @@ function checkColision() {
 
 function addListners() {
 
-    btnCalcularTranslacao.addEventListener("click", function () {
+/*    btnCalcularTranslacao.addEventListener("click", function () {
         transladarObjetos(10, 10, draws[0].matriz, draws[0].type);
+        
+    });*/
+    btnCalcularMEscala.addEventListener("click", function () {
+        mEscala(10, 10, draws[0].matriz, draws[0].type);
         
     });
 

@@ -24,7 +24,9 @@ function transladarObjetos(dx, dy, mObj, tipo) {
     ];
     var result = multiplyMatrices(mT, mObj);
     console.log(result);
+
     clearCanvas();
+    
     if(tipo == "LINHA"){
         addDotToCanvas(result[0][0],result[1][0]);
         addDotToCanvas(result[0][1],result[1][1]);
@@ -55,7 +57,7 @@ function transladarObjetos(dx, dy, mObj, tipo) {
         resetPontos();
         
         draws.push(retangulo);
-        console.table(result);
+        
 
     }
 }
