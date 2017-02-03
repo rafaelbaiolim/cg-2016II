@@ -10,6 +10,7 @@ var lastIdAtivo = "";
 var btnCalcularTranslacao;
 var btnCalcularMEscala;
 var btnCalcularRotacao;
+var btnCalcularZoomExtend;
 
 window.onload = function () {
     construct();
@@ -64,6 +65,7 @@ function construct() {
     btnCalcularTranslacao = document.getElementById("calcTranslacao");
     btnCalcularMEscala = document.getElementById("calcMEscala");
     btnCalcularRotacao = document.getElementById("calcRotacao");
+    btnCalcularZoomExtend = document.getElementById("calcZoomExtend");
 
 //    for (var j = 10; j < 500; j += 22) {
 //        for (var i = 10; i < 500; i += 20) {
@@ -105,17 +107,20 @@ function addListners() {
         transladarObjetos(10, 10, draws[0].matriz, draws[0].type);
         
     });
+
     btnCalcularMEscala.addEventListener("click", function () {
-        mEscala(1, 2, draws[0].matriz, draws[0].type);
+        mEscala(-1, 2, draws[0].matriz, draws[0].type);
 
         
     });
+
     btnCalcularRotacao.addEventListener("click", function () {
-        rotacionarObjetos(180, draws[0].matriz, draws[0].type);
-
-        
+        rotacionarObjetos(90, draws[0].matriz, draws[0].type);
     });
 
+    btnCalcularZoomExtend.addEventListener("click", function(){
+        zoomExtend(draws[0].matriz, draws[0].type);
+    });
 
     canvas.addEventListener('mousemove', function (evt) {
         var mousePos = getMousePos(evt);
@@ -311,6 +316,7 @@ function Rectangle(props) {
 }
 
 function clearCanvas() {
+    draws = [];
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 }

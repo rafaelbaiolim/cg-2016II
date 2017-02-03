@@ -1,21 +1,27 @@
+function pegaMenorPonto(mObj){
+    
+
+    var dx = Math.min.apply(null, mObj[0]);
+    var dy = Math.min.apply(null, mObj[1]);
+    
+    return {dx:dx, dy:dy};
+
+}
+
+Array.prototype.min = function(){
+    return Math.min.apply(null, this);
+};
+
 function rotacionarObjetos(graus, mObj, tipo){
     //console.log("mobj");
     //console.table(mObj);
 
-    var dx, dy;
-    for (var i = 0; i < mObj.length; i++) {
-        for (var j = 0; j < mObj[0].length; j++) {
-            if(i == 0 && 0==j){
-                dx = mObj[i][j];
-     
-            }
-            if(i == 1 && j==0){
-                dy = mObj[i][j];   
-     
-            }
-        }
-    }
+    var menores = pegaMenorPonto(mObj);
+    
+    var dx = menores.dx, dy = menores.dy;
 
+    console.log(dx);
+    console.log(dy);
     var cos = Math.round(Math.cos(graus * Math.PI / 180));      
     var sen = Math.round(Math.sin(graus * Math.PI / 180)); 
     
@@ -56,9 +62,6 @@ function rotacionarObjetos(graus, mObj, tipo){
         addDotToCanvas(result[0][0],result[1][0]);
         addDotToCanvas(result[0][2],result[1][2]);
 
-        console.log(result[0][0]);
-        console.log(result[1][0]);
-        
         var retangulo = new Rectangle(
                 {
                     p1: pontos[1],
