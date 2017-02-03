@@ -9,6 +9,7 @@ var lastIdAtivo = "";
 
 var btnCalcularTranslacao;
 var btnCalcularMEscala;
+var btnCalcularRotacao;
 
 window.onload = function () {
     construct();
@@ -62,6 +63,7 @@ function construct() {
 
     btnCalcularTranslacao = document.getElementById("calcTranslacao");
     btnCalcularMEscala = document.getElementById("calcMEscala");
+    btnCalcularRotacao = document.getElementById("calcRotacao");
 
 //    for (var j = 10; j < 500; j += 22) {
 //        for (var i = 10; i < 500; i += 20) {
@@ -104,7 +106,12 @@ function addListners() {
         
     });
     btnCalcularMEscala.addEventListener("click", function () {
-        mEscala(0, 2, draws[0].matriz, draws[0].type);
+        mEscala(1, 2, draws[0].matriz, draws[0].type);
+
+        
+    });
+    btnCalcularRotacao.addEventListener("click", function () {
+        rotacionarObjetos(90, draws[0].matriz, draws[0].type);
 
         
     });
