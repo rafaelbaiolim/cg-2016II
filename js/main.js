@@ -111,7 +111,7 @@ function addListners() {
         
     });
     btnCalcularRotacao.addEventListener("click", function () {
-        rotacionarObjetos(90, draws[0].matriz, draws[0].type);
+        rotacionarObjetos(180, draws[0].matriz, draws[0].type);
 
         
     });
