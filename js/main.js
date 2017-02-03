@@ -99,12 +99,13 @@ function checkColision() {
 
 function addListners() {
 
-/*    btnCalcularTranslacao.addEventListener("click", function () {
+    btnCalcularTranslacao.addEventListener("click", function () {
         transladarObjetos(10, 10, draws[0].matriz, draws[0].type);
         
-    });*/
+    });
     btnCalcularMEscala.addEventListener("click", function () {
         mEscala(10, 10, draws[0].matriz, draws[0].type);
+
         
     });
 
@@ -293,7 +294,7 @@ function Rectangle(props) {
     this.obj.matriz.push([this.linha1.posYO, this.linha1.posYD, this.linha2.posYD, this.linha4.posYO]);
     this.obj.matriz.push([1, 1, 1, 1]);
 
-    console.table(this.obj.matriz);
+    //console.table(this.obj.matriz);
 
     
         
@@ -366,7 +367,7 @@ function Line(props) {
     
     
 
-    console.table(this.obj.matriz);
+    //console.table(this.obj.matriz);
 
     this.draw = function () {
         ctx.beginPath();
