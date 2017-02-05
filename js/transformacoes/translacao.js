@@ -26,38 +26,34 @@ function transladarObjetos(dx, dy, mObj, tipo) {
     console.log(result);
 
     clearCanvas();
-    
-    if(tipo == "LINHA"){
-        addDotToCanvas(result[0][0],result[1][0]);
-        addDotToCanvas(result[0][1],result[1][1]);
-        
+
+    if (tipo == "LINHA") {
+        addDotToCanvas(result[0][0], result[1][0]);
+        addDotToCanvas(result[0][1], result[1][1]);
+
         var linha = new Line({
             xO: pontos[0].posX,
             yO: pontos[0].posY,
             xD: pontos[1].posX,
             yD: pontos[1].posY,
-            
-        }).draw();
 
-        resetPontos();
+        }).draw();
         draws.push(linha);
     }
-    if(tipo == "TRIANGULO"){}   
-    if(tipo == "RETANGULO"){   
-        addDotToCanvas(result[0][0],result[1][0]);
-        addDotToCanvas(result[0][2],result[1][2]);
+    if (tipo == "TRIANGULO") {
+    }
+    if (tipo == "RETANGULO") {
+        addDotToCanvas(result[0][0], result[1][0]);
+        addDotToCanvas(result[0][2], result[1][2]);
 
         var retangulo = new Rectangle(
                 {
                     p1: pontos[1],
                     p0: pontos[0],
-                    
-                }).draw();
-        
-        resetPontos();
-        
-        draws.push(retangulo);
-        
 
+                }).draw();
+
+        draws.push(retangulo);
     }
+    resetPontos();
 }

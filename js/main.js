@@ -11,7 +11,7 @@ var btnCalcularTranslacao;
 var btnCalcularMEscala;
 var btnCalcularRotacao;
 var btnCalcularZoomExtend;
-var objGlobal;
+var objSelecionado;
 
 window.onload = function () {
     construct();
@@ -96,48 +96,108 @@ function resetPontos() {
     pontos = [];
 }
 
-function checkColision() {
-    for (var index in draws) {
-        console.log(index);
+/**
+ * Procura se já existe um valor no array
+ * considerado uma margem de erro de 10pt
+ * @param {type} value
+ * @param {type} arr
+ * @returns {Number|nearByDot.arr}
+ */
+function nearByDot(value, arr) {
+    for (var i in arr) {
+        for (j = 0; j < 10; j++) {
+            if (!isNaN(arr[i])) {
+                if (Math.floor(arr[i]) == Math.floor(value) + j ||
+                        Math.floor(arr[i]) == Math.floor(value) - j) {
+                    return i;
+                }
+
+            }
+        }
     }
+    return -1;
 }
+
+
+function procurarObjPorInterseccao() {
+    if (draws <= 0) {
+        return;
+    }
+    for (var i in draws) {
+        if (draws[i].matriz) {
+            if (nearByDot(coordAtual.x, draws[i].matriz[0]) !== -1 &&
+                    nearByDot(coordAtual.y, draws[i].matriz[1]) !== -1
+                    ) {
+                return draws[i];
+            }
+        }
+    }
+    return false;
+}
+
+
 
 function addListners() {
 
     btnCalcularTranslacao.addEventListener("click", function () {
-        transladarObjetos(100, 100, draws[0].matriz, draws[0].type);
-        
+        if (!objSelecionado) {
+            alert("Selecione um desenho para calcular.");
+            return;
+        }
+        transladarObjetos(100, 100, objSelecionado.matriz, objSelecionado.type);
+        objSelecionado = undefined;
     });
 
     btnCalcularMEscala.addEventListener("click", function () {
-        mEscala(-1, 2, draws[0].matriz, draws[0].type);
-
-        
+        if (!objSelecionado) {
+            alert("Selecione um desenho para calcular.");
+            return;
+        }
+        mEscala(-1, 2, objSelecionado.matriz, objSelecionado.type);
+        objSelecionado = undefined;
     });
 
     btnCalcularRotacao.addEventListener("click", function () {
-        rotacionarObjetos(90, draws[0].matriz, draws[0].type);
+        if (!objSelecionado) {
+            alert("Selecione um desenho para calcular.");
+            return;
+        }
+        rotacionarObjetos(90, objSelecionado, objSelecionado.type);
+        objSelecionado = undefined;
     });
 
     // btnCalcularZoomExtend.addEventListener("click", function(evt){
-        
+
     //     if(objGlobal != undefined){
     //         zoomExtend(mousePos, draws[0].type);
     //     }    
     // });
 
+    canvas.addEventListener("mouseout", function () {
+        coordAtual = {x: 0, y: 0};
+        setMouseLabels();
+    }, false);
+
     canvas.addEventListener('mousemove', function (evt) {
         var mousePos = getMousePos(evt);
         coordAtual = {x: mousePos.x, y: mousePos.y};
         setMouseLabels();
+        document.getElementById("board").style.cursor = "default";
+        if (procurarObjPorInterseccao()) {
+            document.getElementById("board").style.cursor = "pointer";
+        }
+
     }, false);
 
     canvas.addEventListener('mousedown', function (evt) {
-        addDotToCanvas();
-        //var obj = checkColision();
+        objSelecionado = procurarObjPorInterseccao();
 
-       //objGlobal = intersecaoPontos(draws[0].matriz);
-        
+        if (objSelecionado) {
+            setObjSelecionado();
+        } else {
+            addDotToCanvas();
+        }
+
         if (drawType == "LINHA") {
             if (pontos.length == 2) {
                 var linha = new Line({
@@ -172,7 +232,6 @@ function addListners() {
                 draws.push(retangulo);
             }
         }
-
     });
 }
 
@@ -189,11 +248,68 @@ function KeyPress(e) {
     }
 }
 
+function setObjSelecionado(pSelecionado) {
+    if (draws.length <= 0) {
+        return;
+    }
+    var fill;
+    if (pSelecionado) {
+        objSelecionado = pSelecionado;
+    }
+
+    var index = draws.indexOf(objSelecionado);
+    if (index == -1) {
+        return;
+    }
+    clearOnlyDrawScreen();
+    draws.push(draws[index]);
+    draws.splice(index, 1);
+
+    for (var i = 0; i < draws.length; i++) {
+
+        if (!draws[i].props) {
+            continue;
+        } else {
+            fill = "";
+        }
+
+        if (i == (draws.length - 1)) {
+            fill = "red";
+        }
+
+        draws[i].props.drawDots = true;
+        draws[i].props.fill = fill;
+
+        switch (draws[i].type) {
+            case "LINHA":
+                new Line(draws[i].props).draw();
+                break;
+            case "RETANGULO":
+                new Rectangle(draws[i].props).draw();
+                break;
+        }
+    }
+
+
+}
+
+function clearOnlyDrawScreen() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pontos = [];
+}
+
 function removeLastObj() {
+    if (draws.length <= 0) {
+        return;
+    }
     draws.pop();
-    clearCanvas();
+    clearOnlyDrawScreen();
+
     for (var i in draws) {
-        draws[i].props.drawDots = true
+        if (!draws[i].props) {
+            continue;
+        }
+        draws[i].props.drawDots = true;
         switch (draws[i].type) {
             case "LINHA":
                 new Line(draws[i].props).draw();
@@ -266,11 +382,12 @@ function Rectangle(props) {
     this.obj.linhas = [];
     this.obj.matriz = [];
     this.obj.dots = [];
+    this.obj.fill;
     this.obj.props = props;
 
     if (props.drawDots) {
-        addDotToCanvas(props.p0.posX, props.p0.posY);
-        addDotToCanvas(props.p1.posX, props.p1.posY);
+        addDotToCanvas(props.p0.posX, props.p0.posY, props.fill);
+        addDotToCanvas(props.p1.posX, props.p1.posY, props.fill);
     }
 
     this.linha1 = new Line({
@@ -282,7 +399,7 @@ function Rectangle(props) {
 
     this.obj.linhas.push(this.linha1);
 
-    addDotToCanvas(this.linha1.posXD, this.linha1.posYD);
+    addDotToCanvas(this.linha1.posXD, this.linha1.posYD, props.fill);
     this.linha2 = new Line({
         xO: this.linha1.posXD,
         yO: this.linha1.posYD,
@@ -292,7 +409,7 @@ function Rectangle(props) {
     this.obj.linhas.push(this.linha2);
 
 
-    addDotToCanvas(props.p0.posX, props.p1.posY);
+    addDotToCanvas(props.p0.posX, props.p1.posY, props.fill);
     this.linha3 = new Line({
         xO: props.p0.posX,
         yO: props.p0.posY,
@@ -317,8 +434,8 @@ function Rectangle(props) {
 
     //console.table(this.obj.matriz);
 
-    
-        
+
+
     this.draw = function () {
         return this.obj;
     }
@@ -326,12 +443,15 @@ function Rectangle(props) {
 
 function clearCanvas() {
     draws = [];
-    pontos = [] ;
+    pontos = [];
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 }
 
-function addDotToCanvas(coordX, coordY) {
+function addDotToCanvas(coordX, coordY, propFill) {
+    if (!propFill) {
+        propFill = "#000000";
+    }
 
     if (!coordX) {
         coordX = coordAtual.x;
@@ -345,7 +465,7 @@ function addDotToCanvas(coordX, coordY) {
         x: coordX,
         y: coordY,
         radius: 5,
-        fill: "#000000",
+        fill: propFill,
     }).draw();
 
     pontos.push(ponto);
@@ -358,14 +478,14 @@ function Line(props) {
     this.obj.type = "LINHA";
     this.obj.matriz = [];
     this.obj.dots = [];
-    
+
     this.obj.props = props;
 
     try {
 
         if (props.drawDots) {
-            addDotToCanvas(props.xO, props.yO);
-            addDotToCanvas(props.xD, props.yD);
+            addDotToCanvas(props.xO, props.yO, props.fill);
+            addDotToCanvas(props.xD, props.yD, props.fill);
 
         }
 
@@ -388,8 +508,8 @@ function Line(props) {
     this.obj.matriz.push([this.obj.posXO, this.obj.posXD]);
     this.obj.matriz.push([this.obj.posYO, this.obj.posYD]);
     this.obj.matriz.push([1, 1]);
-    
-    
+
+
 
     //console.table(this.obj.matriz);
 
@@ -398,7 +518,7 @@ function Line(props) {
         ctx.moveTo(this.obj.posXO, this.obj.posYO);
         ctx.lineTo(this.obj.posXD, this.obj.posYD);
         ctx.stroke();
-        
+
 
         return this.obj;
     }
@@ -449,7 +569,6 @@ function Circle(props) {
     this.obj = {};
     this.obj.dots = [];
     try {
-
         this.obj.posX = props.x;
         this.obj.posY = props.y;
         this.obj.fill = props.fill;
@@ -470,4 +589,4 @@ function Circle(props) {
         return this.obj;
     }
 
-}
+}   
