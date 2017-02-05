@@ -104,7 +104,7 @@ function checkColision() {
 function addListners() {
 
     btnCalcularTranslacao.addEventListener("click", function () {
-        transladarObjetos(10, 10, draws[0].matriz, draws[0].type);
+        transladarObjetos(100, 100, draws[0].matriz, draws[0].type);
         
     });
 
@@ -317,6 +317,7 @@ function Rectangle(props) {
 
 function clearCanvas() {
     draws = [];
+    pontos = [] ;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 }
