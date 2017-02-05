@@ -13,9 +13,6 @@ Array.prototype.min = function(){
 };
 
 function rotacionarObjetos(graus, mObj, tipo){
-    //console.log("mobj");
-    //console.table(mObj);
-
     var menores = pegaMenorPonto(mObj);
     
     var dx = menores.dx, dy = menores.dy;
@@ -33,14 +30,9 @@ function rotacionarObjetos(graus, mObj, tipo){
         [sen, cos, (-dx*sen) - (dy * cos) + dy],
         [0, 0, 1]
     ];
-    //console.log(R);
-      
 
     var result = multiplyMatrices(R, mObj);
-    //console.log("Final com uma operação");
-    //console.table(result);
-   
-
+    
     clearCanvas();
 
     if(tipo == "LINHA"){

@@ -3,60 +3,16 @@ function mEscala(sx, sy, mObj, tipo) {
     //console.log("mobj");
     console.table(mObj);
 
-    var dx, dy;
+    var menores = pegaMenorPonto(mObj);
+    
+    var dx = menores.dx, dy = menores.dy;
 
-    
-    for (var i = 0; i < mObj.length; i++) {
-        for (var j = 0; j < mObj[0].length; j++) {
-            if(i == 0 && 0==j){
-                dx = mObj[i][j];
-     
-            }
-            if(i == 1 && j==0){
-                dy = mObj[i][j];   
-     
-            }
-        }
-    }    
-    
     var S = [
         [sx, 0, dx - (dx * sx)],
         [0, sy, dy - (dy * sy)],
         [0, 0, 1]
     ];
-    //console.log("S");
-    //console.table(S);
-
-    //var S1 = [
-    //    [sx, 0, 0],
-    //    [0, sy, 0],
-    //    [0, 0, 1]
-    //];
     
-
-    //var to = [
-    //    [1, 0, (-dx)],
-    //    [0, 1, (-dy)],
-    //   [0, 0, 1]
-    //];
-    //var tRetorno = [
-    //    [1, 0, dx],
-    //    [0, 1, dy],
-    //   [0, 0, 1]
-    //];
-    //console.log("tRetorno");
-    //console.table(tRetorno);
-
-    //var subResult = multiplyMatrices(S1, to);
-    //console.log("subResult");
-    //console.table(subResult);
-    //var result1 = multiplyMatrices(tRetorno, subResult);
-
-    //var todas = multiplyMatrices(result1, mObj);
-    //console.log("Final1");
-    //console.table(todas);
-   
-
     var result = multiplyMatrices(S, mObj);
     console.log("Final com uma operação");
     console.table(result);
@@ -78,7 +34,7 @@ function mEscala(sx, sy, mObj, tipo) {
         resetPontos();
         draws.push(linha);
     }
-     if(tipo == "RETANGULO"){   
+    if(tipo == "RETANGULO"){   
         addDotToCanvas(result[0][0],result[1][0]);
         addDotToCanvas(result[0][2],result[1][2]);
 
