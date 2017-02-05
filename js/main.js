@@ -11,6 +11,7 @@ var btnCalcularTranslacao;
 var btnCalcularMEscala;
 var btnCalcularRotacao;
 var btnCalcularZoomExtend;
+var objGlobal;
 
 window.onload = function () {
     construct();
@@ -118,9 +119,12 @@ function addListners() {
         rotacionarObjetos(90, draws[0].matriz, draws[0].type);
     });
 
-    btnCalcularZoomExtend.addEventListener("click", function(){
-        zoomExtend(draws[0].matriz, draws[0].type);
-    });
+    // btnCalcularZoomExtend.addEventListener("click", function(evt){
+        
+    //     if(objGlobal != undefined){
+    //         zoomExtend(mousePos, draws[0].type);
+    //     }    
+    // });
 
     canvas.addEventListener('mousemove', function (evt) {
         var mousePos = getMousePos(evt);
@@ -131,6 +135,9 @@ function addListners() {
     canvas.addEventListener('mousedown', function (evt) {
         addDotToCanvas();
         //var obj = checkColision();
+
+       //objGlobal = intersecaoPontos(draws[0].matriz);
+        
         if (drawType == "LINHA") {
             if (pontos.length == 2) {
                 var linha = new Line({
@@ -203,6 +210,7 @@ function removeLastObj() {
 //    this.obj.type = "RETANGULO";
 //    this.linhas = {};
 //    this.obj.linhas = [];
+//    this.obj.dots = [];
 //    this.obj.props = props;
 //
 //
@@ -257,6 +265,7 @@ function Rectangle(props) {
     this.linhas = {};
     this.obj.linhas = [];
     this.obj.matriz = [];
+    this.obj.dots = [];
     this.obj.props = props;
 
     if (props.drawDots) {
@@ -348,6 +357,7 @@ function Line(props) {
     this.obj = {};
     this.obj.type = "LINHA";
     this.obj.matriz = [];
+    this.obj.dots = [];
     
     this.obj.props = props;
 
@@ -437,6 +447,7 @@ function setLine(evt) {
 
 function Circle(props) {
     this.obj = {};
+    this.obj.dots = [];
     try {
 
         this.obj.posX = props.x;
