@@ -153,7 +153,7 @@ function addListners() {
             alert("Selecione um desenho para calcular.");
             return;
         }
-        mEscala(-1, 2, objSelecionado.matriz, objSelecionado.type);
+        mEscala(2, 2, objSelecionado.matriz, objSelecionado.type);
         objSelecionado = undefined;
     });
 
