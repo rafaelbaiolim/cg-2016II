@@ -226,10 +226,10 @@ function addListners() {
 
         if (drawType == "TRIANGULO") {
             if (pontos.length >= 2) {
-                var retangulo = new Triangle({p0: pontos[0],
+                var triangulo = new Triangle({p0: pontos[0],
                     p1: pontos[1], dots: pontos}).draw();
                 resetPontos();
-                draws.push(retangulo);
+                draws.push(triangulo);
             }
         }
     });
@@ -321,58 +321,71 @@ function removeLastObj() {
     }
 }
 
-//function Triangle(props) {
-//    this.obj = {};
-//    this.obj.type = "RETANGULO";
-//    this.linhas = {};
-//    this.obj.linhas = [];
-//    this.obj.dots = [];
-//    this.obj.props = props;
-//
-//
-//    if (props.drawDots) {
-//        addDotToCanvas(props.p0.posX, props.p0.posY);
-//        addDotToCanvas(props.p1.posX, props.p1.posY);
-//    }
-//
-//    this.linha1 = new Line({
-//        xO: props.p0.posX,
-//        yO: props.p0.posY,
-//        xD: props.p1.posX,
-//        yD: props.p0.posY
-//    }).draw();
-//    this.obj.linhas.push(this.linha1);
-//
-//    addDotToCanvas(this.linha1.posXD, this.linha1.posYD);
-//    this.linha2 = new Line({
-//        xO: this.linha1.posXD,
-//        yO: this.linha1.posYD,
-//        xD: props.p1.posX,
-//        yD: props.p1.posY
-//    }).draw();
-//    this.obj.linhas.push(this.linha2);
-//
-//    addDotToCanvas(props.p0.posX, props.p1.posY);
-//    this.linha3 = new Line({
-//        xO: props.p0.posX,
-//        yO: props.p0.posY,
-//        xD: props.p0.posX,
-//        yD: props.p1.posY
-//    }).draw();
-//    this.obj.linhas.push(this.linha3);
-//
-//    this.linha4 = new Line({
-//        xO: this.linha3.posXD,
-//        yO: this.linha3.posYD,
-//        xD: props.p1.posX,
-//        yD: props.p1.posY
-//    }).draw();
-//    this.obj.linhas.push(this.linha4);
-//
-//    this.draw = function () {
-//        return this.obj;
-//    }
-//}
+function Triangle(props) {
+   this.obj = {};
+   this.obj.type = "TRIANGULO";
+   this.linhas = {};
+   this.obj.linhas = [];
+   this.obj.matriz = [];
+   this.obj.dots = [];
+   this.obj.props = props;
+
+   if (props.drawDots) {
+       addDotToCanvas(props.p0.posX, props.p0.posY);
+       addDotToCanvas(props.p1.posX, props.p1.posY);
+
+    }
+
+    
+    this.linha1 = new Line({
+        xO: props.p0.posX,
+        yO: props.p0.posY,
+        xD: props.p1.posX,
+        yD: props.p1.posY
+    }).draw();
+    
+    //addDotToCanvas(this.linha1.posXD, this.linha1.posYD);
+    
+    this.obj.linhas.push(this.linha1);   
+
+    this.linha2 = new Line({
+
+        xO: this.linha1.posXD,
+        yO: this.linha1.posYD,
+        xD: this.linha1.posXO,
+        yD: props.p1.posY
+
+    }).draw();
+
+    addDotToCanvas(this.linha2.posXD, this.linha2.posYD);
+    
+    this.obj.linhas.push(this.linha2);  
+    
+    this.linha3 = new Line({
+   
+        xO: this.linha1.posXO,
+        yO: this.linha2.posYD,  
+        xD: this.linha1.posXO,
+        yD: this.linha1.posYO
+   
+   }).draw();
+
+    //addDotToCanvas(this.linha3.posXD, this.linha3.posYD);
+    
+    
+    this.obj.linhas.push(this.linha3);  
+   
+    
+
+    this.obj.matriz.push([this.linha1.posXO, this.linha1.posXD, this.linha2.posXD,]);
+    this.obj.matriz.push([this.linha1.posYO, this.linha1.posYD, this.linha2.posYD,]);
+    this.obj.matriz.push([1, 1, 1]);
+
+    console.table(this.obj.matriz);
+    this.draw = function () {
+       return this.obj;
+    }
+}
 
 function Rectangle(props) {
 
