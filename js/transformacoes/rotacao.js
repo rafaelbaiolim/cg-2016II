@@ -67,4 +67,24 @@ function rotacionarObjetos(graus, mObj, tipo){
         
 
     }  
+    if(tipo == "TRIANGULO"){   
+        addDotToCanvas(result[0][0],result[1][0]);
+        addDotToCanvas(result[0][1],result[1][1]);
+
+        console.log(result[0][0]);
+        console.log(result[1][0]);
+        
+        var triangulo = new Triangle(
+                {
+                    p1: pontos[1],
+                    p0: pontos[0],
+                    
+                }).draw();
+        
+        resetPontos();
+        
+        draws.push(triangulo);
+        
+
+    }
 }

@@ -40,8 +40,7 @@ function transladarObjetos(dx, dy, mObj, tipo) {
         }).draw();
         draws.push(linha);
     }
-    if (tipo == "TRIANGULO") {
-    }
+    
     if (tipo == "RETANGULO") {
         addDotToCanvas(result[0][0], result[1][0]);
         addDotToCanvas(result[0][2], result[1][2]);
@@ -56,4 +55,25 @@ function transladarObjetos(dx, dy, mObj, tipo) {
         draws.push(retangulo);
     }
     resetPontos();
+
+    if(tipo == "TRIANGULO"){   
+        addDotToCanvas(result[0][0],result[1][0]);
+        addDotToCanvas(result[0][1],result[1][1]);
+
+        console.log(result[0][0]);
+        console.log(result[1][0]);
+        
+        var triangulo = new Triangle(
+                {
+                    p1: pontos[1],
+                    p0: pontos[0],
+                    
+                }).draw();
+        
+        resetPontos();
+        
+        draws.push(triangulo);
+        
+
+    }
 }
