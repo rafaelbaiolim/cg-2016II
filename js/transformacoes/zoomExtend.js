@@ -43,66 +43,18 @@ function zoomExtend(janela, tipo, mObj) {
 			   			[0, 0, 1]];
 
 	var result = multiplyMatrices(tJanelaViewport, mObj);
+	result.type = tipo;
 	console.table(result);
 
 	clearCanvas();
 	
-	if (tipo == "LINHA") {
-        addDotToCanvas(result[0][0], result[1][0]);
-        addDotToCanvas(result[0][1], result[1][1]);
-
-        var linha = new Line({
-            xO: pontos[0].posX,
-            yO: pontos[0].posY,
-            xD: pontos[1].posX,
-            yD: pontos[1].posY,
-
-        }).draw();
-        draws.push(linha);
-    }
-    
-    if (tipo == "RETANGULO") {
-        addDotToCanvas(result[0][0], result[1][0]);
-        addDotToCanvas(result[0][2], result[1][2]);
-
-        var retangulo = new Rectangle(
-                {
-                    p1: pontos[1],
-                    p0: pontos[0],
-
-                }).draw();
-
-        draws.push(retangulo);
-    }
-    resetPontos();
-
-    if(tipo == "TRIANGULO"){   
-        addDotToCanvas(result[0][0],result[1][0]);
-        addDotToCanvas(result[0][1],result[1][1]);
-
-        console.log(result[0][0]);
-        console.log(result[1][0]);
-        
-        var triangulo = new Triangle(
-                {
-                    p1: pontos[1],
-                    p0: pontos[0],
-                    
-                }).draw();
-        
-        resetPontos();
-        
-        draws.push(triangulo);
-        
-
-    }
-    mapeamentoCentro(result, mObj.type);
-	
+	desenha(result, result.type)
+	mapeamentoCentro(janela, result, result.type);
 	
 	
 
 }
-function mapeamentoCentro(mObj, tipo){
+function mapeamentoCentro(janela, mObj, tipo){
 	//calcular a proporcao Ratio da Janela e da Viewport
 	var menores = pegaMenorPonto(mObj);
 	var maiores = pegaMaiorPonto(mObj);
@@ -140,20 +92,27 @@ function mapeamentoCentro(mObj, tipo){
 	//transladar para o centro
 	if(rw > rv){ 
 		//ajustar pela altura
-		console.log("maior");
 		result = (translacaoVertical, mObj);
-		console.table(result);
+		result.type = tipo;
+		clearCanvas();
+		desenha(result, result.type);
 
 	}
 	if(rw < rv){
 		//ajustar pela largura
 		result = (translacaoHorizontal, mObj);
-		console.log("menor");
-		console.table(result);
+		result.type = tipo;
+		clearCanvas();
+		desenha(result, result.type);
 	}	   		
-	clearCanvas();
+	
 
+	
+}
+
+function desenha(result, tipo){
 	if (tipo == "LINHA") {
+        console.log("entrei");
         addDotToCanvas(result[0][0], result[1][0]);
         addDotToCanvas(result[0][1], result[1][1]);
 
