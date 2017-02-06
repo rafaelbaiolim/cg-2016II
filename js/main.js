@@ -6,8 +6,8 @@ var coordAtual = {x: 0, y: 0}
 var pontos = [];
 var draws = [];
 var lastIdAtivo = "";
-var viewPort;
-var objAsViewPort = false;
+var janela;
+var objAsjanela = false;
 
 var btnCalcularTranslacao;
 var btnCalcularMEscala;
@@ -158,7 +158,7 @@ function inicializarMemo(memo, minX, maxX, minY, maxY) {
 }
 
 
-function getObjOnViewPort(matrizJanela) {
+function getObjOnjanela(matrizJanela) {
     var minX = Math.min.apply(null, matrizJanela[0]);
     var minY = Math.min.apply(null, matrizJanela[1]);
     var maxX = Math.max.apply(null, matrizJanela[0]);
@@ -166,7 +166,7 @@ function getObjOnViewPort(matrizJanela) {
 
     var memo = [[], []];
     inicializarMemo(memo, minX, maxX, minY, maxY);
-    console.log(memo);
+    //console.log(memo);
     var objNaJanela = [];
     var obj = false;
     for (var i = minX; i < maxX; i++) {
@@ -185,11 +185,79 @@ function getObjOnViewPort(matrizJanela) {
         }
     }
     memo = [[], []];
+
     return objNaJanela;
 
 }
 
+function multiplyMatrices(m1, m2) {
+    var result = [];
+    for (var i = 0; i < m1.length; i++) {
+        result[i] = [];
+        for (var j = 0; j < m2[0].length; j++) {
+            var sum = 0;
+            for (var k = 0; k < m1[0].length; k++) {
+                sum += m1[i][k] * m2[k][j];
+            }
+            result[i][j] = sum;
+        }
+    }
+    return result;
+}
 
+function desenha(result, tipo){
+    if (tipo == "LINHA") {
+        //console.log("entrei");
+        addDotToCanvas(result[0][0], result[1][0]);
+        addDotToCanvas(result[0][1], result[1][1]);
+
+        var linha = new Line({
+            xO: pontos[0].posX,
+            yO: pontos[0].posY,
+            xD: pontos[1].posX,
+            yD: pontos[1].posY,
+
+        }).draw();
+        draws.push(linha);
+    }
+    
+    if (tipo == "RETANGULO") {
+        addDotToCanvas(result[0][0], result[1][0]);
+        addDotToCanvas(result[0][2], result[1][2]);
+
+        var retangulo = new Rectangle(
+                {
+                    p1: pontos[1],
+                    p0: pontos[0],
+
+                }).draw();
+
+        draws.push(retangulo);
+    }
+    resetPontos();
+
+    if(tipo == "TRIANGULO"){   
+        addDotToCanvas(result[0][0],result[1][0]);
+        addDotToCanvas(result[0][1],result[1][1]);
+
+        console.log(result[0][0]);
+        console.log(result[1][0]);
+        
+        var triangulo = new Triangle(
+                {
+                    p1: pontos[1],
+                    p0: pontos[0],
+                    
+                }).draw();
+        
+        resetPontos();
+        
+        draws.push(triangulo);
+        
+
+    }
+
+}
 
 
 function addListners() {
@@ -199,7 +267,7 @@ function addListners() {
             alert("Selecione um desenho para calcular.");
             return;
         }
-        transladarObjetos(100, 100, objSelecionado.matriz, objSelecionado.type);
+        transladarObjetos(100, 2, objSelecionado.matriz, objSelecionado.type);
         objSelecionado = undefined;
     });
 
@@ -223,18 +291,20 @@ function addListners() {
 
     btnCalcularZoomExtend.addEventListener("click", function (evt) {
         //MUDAR PARA UM ALERT
-        objAsViewPort = true;
+        objAsjanela = true;
         console.log("DESENHE UM RETANGULO E EM SEGUIDA CALCULE NOVAMENTE");
         setDrawType("RETANGULO", "tipoRetangulo");
         
-        if (viewPort != undefined) {
+        if (janela != undefined) {
             alert("BELEZA");
             var objNaJanela = [];
-            objNaJanela = getObjOnViewPort(viewPort.matriz);
-            console.log(objNaJanela);
-            //zoomExtend(mousePos, draws[0].type);
-            viewPort = undefined;
-            objAsViewPort = false;
+            objNaJanela = getObjOnjanela(janela.matriz);
+            //console.log(objNaJanela);
+            
+            zoomExtend(janela.matriz, objNaJanela.type, objNaJanela);
+            
+            janela = undefined;
+            objAsjanela = false;
             removeLastObj(true);//apenas redesenha o canvas sem a janela
            
 
@@ -289,8 +359,8 @@ function addListners() {
                             p1: pontos[1],
                         }).draw();
                 resetPontos();
-                if (objAsViewPort) {
-                    viewPort = retangulo;
+                if (objAsjanela) {
+                    janela = retangulo;
                     resetPontos();
                     return true;
                 }
