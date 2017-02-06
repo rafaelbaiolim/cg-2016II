@@ -180,7 +180,7 @@ function addListners() {
             zoomExtend(viewPort.matriz,  objSelecionado.type, draws[0].matriz);
             viewPort = undefined;
             objAsViewPort = false;
-            removeLastObj(true);//apenas redesenha o canvas sem a janela
+            //removeLastObj(true);//apenas redesenha o canvas sem a janela
            
 
             
