@@ -39,7 +39,7 @@ function zoomExtend(janela, tipo, mObj) {
 	
 
 	var tJanelaViewport = [ [sx, 0 ,  (-sx*xmin)],
-			   			[0, -sy , (-sy*ymin)],
+			   			[0, sy , (-sy*ymin)],
 			   			[0, 0, 1]];
 
 	var result = multiplyMatrices(tJanelaViewport, mObj);
