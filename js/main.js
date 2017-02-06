@@ -173,12 +173,17 @@ function addListners() {
         objAsViewPort = true;
         console.log("DESENHE UM RETANGULO E EM SEGUIDA CALCULE NOVAMENTE");
         setDrawType("RETANGULO", "tipoRetangulo");
+        
         if (viewPort != undefined) {
             alert("BELEZA");
-            //zoomExtend(mousePos, draws[0].type);
+            
+            zoomExtend(viewPort.matriz,  objSelecionado.type, draws[0].matriz);
             viewPort = undefined;
             objAsViewPort = false;
             removeLastObj(true);//apenas redesenha o canvas sem a janela
+           
+
+            
         }
     });
 

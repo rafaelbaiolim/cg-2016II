@@ -11,6 +11,18 @@ function pegaMenorPonto(mObj){
 Array.prototype.min = function(){
     return Math.min.apply(null, this);
 };
+function pegaMaiorPonto(mObj){
+    
+
+    var dx = Math.max.apply(null, mObj[0]);
+    var dy = Math.max.apply(null, mObj[1]);
+    
+    return {dx:dx, dy:dy};
+
+}
+Array.prototype.max = function(){
+    return Math.max.apply(null, this);
+};
 
 function rotacionarObjetos(graus, mObj, tipo){
     var menores = pegaMenorPonto(mObj);
