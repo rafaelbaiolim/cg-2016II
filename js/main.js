@@ -226,6 +226,7 @@ function addListners() {
         objAsViewPort = true;
         console.log("DESENHE UM RETANGULO E EM SEGUIDA CALCULE NOVAMENTE");
         setDrawType("RETANGULO", "tipoRetangulo");
+        
         if (viewPort != undefined) {
             alert("BELEZA");
             var objNaJanela = [];
@@ -234,7 +235,10 @@ function addListners() {
             //zoomExtend(mousePos, draws[0].type);
             viewPort = undefined;
             objAsViewPort = false;
-            removeLastObj(true);//apenas redesenha o canvas sem a janela
+            //removeLastObj(true);//apenas redesenha o canvas sem a janela
+           
+
+            
         }
     });
 
