@@ -6,6 +6,8 @@ var coordAtual = {x: 0, y: 0}
 var pontos = [];
 var draws = [];
 var lastIdAtivo = "";
+var viewPort;
+var objAsViewPort = false;
 
 var btnCalcularTranslacao;
 var btnCalcularMEscala;
@@ -166,12 +168,19 @@ function addListners() {
         objSelecionado = undefined;
     });
 
-    // btnCalcularZoomExtend.addEventListener("click", function(evt){
-
-    //     if(objGlobal != undefined){
-    //         zoomExtend(mousePos, draws[0].type);
-    //     }    
-    // });
+    btnCalcularZoomExtend.addEventListener("click", function (evt) {
+        //MUDAR PARA UM ALERT
+        objAsViewPort = true;
+        console.log("DESENHE UM RETANGULO E EM SEGUIDA CALCULE NOVAMENTE");
+        setDrawType("RETANGULO", "tipoRetangulo");
+        if (viewPort != undefined) {
+            alert("BELEZA");
+            //zoomExtend(mousePos, draws[0].type);
+            viewPort = undefined;
+            objAsViewPort = false;
+            removeLastObj(true);//apenas redesenha o canvas sem a janela
+        }
+    });
 
     canvas.addEventListener("mouseout", function () {
         coordAtual = {x: 0, y: 0};
@@ -219,6 +228,11 @@ function addListners() {
                             p0: pontos[0],
                             p1: pontos[1],
                         }).draw();
+                resetPontos();
+                if (objAsViewPort) {
+                    viewPort = retangulo;
+                    resetPontos();
+                }
                 resetPontos();
                 draws.push(retangulo);
             }
@@ -287,6 +301,10 @@ function setObjSelecionado(pSelecionado) {
             case "RETANGULO":
                 new Rectangle(draws[i].props).draw();
                 break;
+            case "TRIANGULO":
+                new Triangle(draws[i].props).draw();
+                break;
+
         }
     }
 
@@ -298,12 +316,15 @@ function clearOnlyDrawScreen() {
     pontos = [];
 }
 
-function removeLastObj() {
+function removeLastObj(justReDraw) {
     if (draws.length <= 0) {
         return;
     }
-    draws.pop();
-    clearOnlyDrawScreen();
+
+    if (justReDraw) {
+        draws.pop();
+        clearOnlyDrawScreen();
+    }
 
     for (var i in draws) {
         if (!draws[i].props) {
@@ -317,36 +338,37 @@ function removeLastObj() {
             case "RETANGULO":
                 new Rectangle(draws[i].props).draw();
                 break;
+            case "TRIANGULO":
+                new Triangle(draws[i].props).draw();
+                break;
         }
     }
 }
 
 function Triangle(props) {
-   this.obj = {};
-   this.obj.type = "TRIANGULO";
-   this.linhas = {};
-   this.obj.linhas = [];
-   this.obj.matriz = [];
-   this.obj.dots = [];
-   this.obj.props = props;
+    this.obj = {};
+    this.obj.type = "TRIANGULO";
+    this.linhas = {};
+    this.obj.linhas = [];
+    this.obj.matriz = [];
+    this.obj.dots = [];
+    this.obj.props = props;
 
-   if (props.drawDots) {
-       addDotToCanvas(props.p0.posX, props.p0.posY);
-       addDotToCanvas(props.p1.posX, props.p1.posY);
-
+    if (props.drawDots) {
+        addDotToCanvas(props.p0.posX, props.p0.posY, props.fill);
+        addDotToCanvas(props.p1.posX, props.p1.posY, props.fill);
     }
 
-    
     this.linha1 = new Line({
         xO: props.p0.posX,
         yO: props.p0.posY,
         xD: props.p1.posX,
         yD: props.p1.posY
     }).draw();
-    
+
     //addDotToCanvas(this.linha1.posXD, this.linha1.posYD);
-    
-    this.obj.linhas.push(this.linha1);   
+
+    this.obj.linhas.push(this.linha1);
 
     this.linha2 = new Line({
 
@@ -357,33 +379,33 @@ function Triangle(props) {
 
     }).draw();
 
-    addDotToCanvas(this.linha2.posXD, this.linha2.posYD);
-    
-    this.obj.linhas.push(this.linha2);  
-    
+    addDotToCanvas(this.linha2.posXD, this.linha2.posYD, props.fill);
+
+    this.obj.linhas.push(this.linha2);
+
     this.linha3 = new Line({
-   
+
         xO: this.linha1.posXO,
-        yO: this.linha2.posYD,  
+        yO: this.linha2.posYD,
         xD: this.linha1.posXO,
         yD: this.linha1.posYO
-   
-   }).draw();
+
+    }).draw();
 
     //addDotToCanvas(this.linha3.posXD, this.linha3.posYD);
-    
-    
-    this.obj.linhas.push(this.linha3);  
-   
-    
 
-    this.obj.matriz.push([this.linha1.posXO, this.linha1.posXD, this.linha2.posXD,]);
-    this.obj.matriz.push([this.linha1.posYO, this.linha1.posYD, this.linha2.posYD,]);
+
+    this.obj.linhas.push(this.linha3);
+
+
+
+    this.obj.matriz.push([this.linha1.posXO, this.linha1.posXD, this.linha2.posXD, ]);
+    this.obj.matriz.push([this.linha1.posYO, this.linha1.posYD, this.linha2.posYD, ]);
     this.obj.matriz.push([1, 1, 1]);
 
     console.table(this.obj.matriz);
     this.draw = function () {
-       return this.obj;
+        return this.obj;
     }
 }
 
@@ -446,9 +468,6 @@ function Rectangle(props) {
     this.obj.matriz.push([1, 1, 1, 1]);
 
     //console.table(this.obj.matriz);
-
-
-
     this.draw = function () {
         return this.obj;
     }
