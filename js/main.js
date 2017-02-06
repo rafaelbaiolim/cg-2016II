@@ -235,7 +235,7 @@ function addListners() {
             //zoomExtend(mousePos, draws[0].type);
             viewPort = undefined;
             objAsViewPort = false;
-            //removeLastObj(true);//apenas redesenha o canvas sem a janela
+            removeLastObj(true);//apenas redesenha o canvas sem a janela
            
 
             
