@@ -9,23 +9,17 @@
 // 	}	
 // };
 
-function calcularProporcao(largura, altura){
-	var R = this.largura / this.altura;
-}
+// function calcularProporcao(largura, altura){
+// 	var R = this.largura / this.altura;
+// }
 
-function zoomExtend(janela, tipo, mObj) {
-	console.table(mObj);
-	// var objetos = intersecaoPontos();
-	// console.log("i"+objetos);
-	// var E = [[1, 0, 0],
-	// 		[0,-1, 0], 
-	// 		[0, 0, 1]];
+
+function zoomExtend(janela, tipo, ListaObj) {
+	
 	var menores = pegaMenorPonto(janela);
 	var maiores = pegaMaiorPonto(janela);
 
-
-	
-    var xmin = menores.dx, 
+	var xmin = menores.dx, 
     	ymin = menores.dy,
     	xmax = maiores.dx,
     	ymax = maiores.dy;
@@ -38,31 +32,42 @@ function zoomExtend(janela, tipo, mObj) {
 		sy = (vMax - 0) / (ymax - ymin);
 	
 
-	var tJanelaViewport = [ [sx, 0 ,  (-sx*xmin)],
-			   			[0, sy , (-sy*ymin)],
-			   			[0, 0, 1]];
-
-	var result = multiplyMatrices(tJanelaViewport, mObj);
-	result.type = tipo;
-	console.table(result);
+	var tJanelaViewport = [ 
+						   [sx, 0 ,  (-sx*xmin)],
+			   			   [0, sy , (-sy*ymin)],
+			   			   [0, 0, 1]
+			   			  ];
 
 	clearCanvas();
+		
 	
-	desenha(result, result.type)
-	mapeamentoCentro(janela, result, result.type);
+	for(var i in ListaObj){
+		var result = multiplyMatrices(tJanelaViewport, ListaObj[i].matriz);
+		
+		result.type = ListaObj[i].type;
+		
+		console.table(result);
+
+		desenha(result, result.type)
+	}
+	console.log("quantidade");
+	console.log(draws);
+
+	//mapeamentoCentro(janela.matriz, result, result.type);
 	
 	
 
 }
 function mapeamentoCentro(janela, mObj, tipo){
 	//calcular a proporcao Ratio da Janela e da Viewport
-	var menores = pegaMenorPonto(mObj);
-	var maiores = pegaMaiorPonto(mObj);
+
+	var menores = pegaMenorPonto(janela);
+	var maiores = pegaMaiorPonto(janela);
 
 	var result;
 	
-    var xmin = menores.dx, 
-    	ymin = menores.dy,
+    var xmin = 0, 
+    	ymin = 0,
     	xmax = maiores.dx,
     	ymax = maiores.dy;
 	
@@ -90,11 +95,13 @@ function mapeamentoCentro(janela, mObj, tipo){
 	 						   [0, 0, 1]];
 		
 	//transladar para o centro
+	clearCanvas();
+		
+	
 	if(rw > rv){ 
 		//ajustar pela altura
 		result = (translacaoVertical, mObj);
 		result.type = tipo;
-		clearCanvas();
 		desenha(result, result.type);
 
 	}
@@ -102,66 +109,11 @@ function mapeamentoCentro(janela, mObj, tipo){
 		//ajustar pela largura
 		result = (translacaoHorizontal, mObj);
 		result.type = tipo;
-		clearCanvas();
 		desenha(result, result.type);
 	}	   		
 	
 
 	
-}
-
-function desenha(result, tipo){
-	if (tipo == "LINHA") {
-        console.log("entrei");
-        addDotToCanvas(result[0][0], result[1][0]);
-        addDotToCanvas(result[0][1], result[1][1]);
-
-        var linha = new Line({
-            xO: pontos[0].posX,
-            yO: pontos[0].posY,
-            xD: pontos[1].posX,
-            yD: pontos[1].posY,
-
-        }).draw();
-        draws.push(linha);
-    }
-    
-    if (tipo == "RETANGULO") {
-        addDotToCanvas(result[0][0], result[1][0]);
-        addDotToCanvas(result[0][2], result[1][2]);
-
-        var retangulo = new Rectangle(
-                {
-                    p1: pontos[1],
-                    p0: pontos[0],
-
-                }).draw();
-
-        draws.push(retangulo);
-    }
-    resetPontos();
-
-    if(tipo == "TRIANGULO"){   
-        addDotToCanvas(result[0][0],result[1][0]);
-        addDotToCanvas(result[0][1],result[1][1]);
-
-        console.log(result[0][0]);
-        console.log(result[1][0]);
-        
-        var triangulo = new Triangle(
-                {
-                    p1: pontos[1],
-                    p0: pontos[0],
-                    
-                }).draw();
-        
-        resetPontos();
-        
-        draws.push(triangulo);
-        
-
-    }
-
 }
 
 
