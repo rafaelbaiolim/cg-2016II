@@ -121,14 +121,23 @@ function nearByDot(value, arr) {
 }
 
 
-function procurarObjPorInterseccao() {
+function procurarObjPorInterseccao(x, y) {
     if (draws <= 0) {
         return;
     }
+
+    if (!x) {
+        x = coordAtual.x;
+    }
+
+    if (!y) {
+        y = coordAtual.y;
+    }
+
     for (var i in draws) {
         if (draws[i].matriz) {
-            if (nearByDot(coordAtual.x, draws[i].matriz[0]) !== -1 &&
-                    nearByDot(coordAtual.y, draws[i].matriz[1]) !== -1
+            if (nearByDot(x, draws[i].matriz[0]) !== -1 &&
+                    nearByDot(y, draws[i].matriz[1]) !== -1
                     ) {
                 return draws[i];
             }
@@ -136,6 +145,50 @@ function procurarObjPorInterseccao() {
     }
     return false;
 }
+
+
+function inicializarMemo(memo, minX, maxX, minY, maxY) {
+    for (var i = minX; i < maxX; i++) {
+        memo[i] = new Array();
+        for (var j = minY; j < maxY; j++) {
+            memo[i][j] = false;
+        }
+    }
+    return memo;
+}
+
+
+function getObjOnViewPort(matrizJanela) {
+    var minX = Math.min.apply(null, matrizJanela[0]);
+    var minY = Math.min.apply(null, matrizJanela[1]);
+    var maxX = Math.max.apply(null, matrizJanela[0]);
+    var maxY = Math.max.apply(null, matrizJanela[1]);
+
+    var memo = [[], []];
+    inicializarMemo(memo, minX, maxX, minY, maxY);
+    console.log(memo);
+    var objNaJanela = [];
+    var obj = false;
+    for (var i = minX; i < maxX; i++) {
+        for (var j = minY; j < maxY; j++) {
+            obj = procurarObjPorInterseccao(i, j);
+            if (obj) {
+                if (obj.matriz) {
+                    var x = obj.matriz[0][0];
+                    var y = obj.matriz[0][1];
+                    if (!memo[x][y]) {
+                        memo[x][y] = true;
+                        objNaJanela.push(obj);
+                    }
+                }
+            }
+        }
+    }
+    memo = [[], []];
+    return objNaJanela;
+
+}
+
 
 
 
@@ -175,6 +228,9 @@ function addListners() {
         setDrawType("RETANGULO", "tipoRetangulo");
         if (viewPort != undefined) {
             alert("BELEZA");
+            var objNaJanela = [];
+            objNaJanela = getObjOnViewPort(viewPort.matriz);
+            console.log(objNaJanela);
             //zoomExtend(mousePos, draws[0].type);
             viewPort = undefined;
             objAsViewPort = false;
@@ -232,6 +288,7 @@ function addListners() {
                 if (objAsViewPort) {
                     viewPort = retangulo;
                     resetPontos();
+                    return true;
                 }
                 resetPontos();
                 draws.push(retangulo);
@@ -321,10 +378,11 @@ function removeLastObj(justReDraw) {
         return;
     }
 
-    if (justReDraw) {
+    if (!justReDraw) {
         draws.pop();
-        clearOnlyDrawScreen();
     }
+
+    clearOnlyDrawScreen();
 
     for (var i in draws) {
         if (!draws[i].props) {
