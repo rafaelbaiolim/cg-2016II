@@ -15,6 +15,18 @@ var btnCalcularRotacao;
 var btnCalcularZoomExtend;
 var objSelecionado;
 
+
+var btnRotacao;
+var btnMudanca;
+var btnTranslacao;
+var btnExtend;
+
+var areaZoom;
+var areaTranslacao;
+var areaEscala;
+var areaRotacao;
+var sX, sY, dX, dY, graus;
+
 window.onload = function () {
     construct();
     addListners();
@@ -69,6 +81,15 @@ function construct() {
     btnCalcularMEscala = document.getElementById("calcMEscala");
     btnCalcularRotacao = document.getElementById("calcRotacao");
     btnCalcularZoomExtend = document.getElementById("calcZoomExtend");
+    
+    dX = $("#trX").val();
+    dY = $("#trY").val();
+    sX = $("#sX").val();
+    sY = $("#sY").val();
+    graus = $("#graus").val();
+    console.log(graus);
+
+
 
 //    for (var j = 10; j < 500; j += 22) {
 //        for (var i = 10; i < 500; i += 20) {
@@ -77,6 +98,8 @@ function construct() {
 //    }
     //stage.update();
 }
+
+$("#idBotao").on("click", function(){ //pego o valor dos forms aqui });
 
 function getMousePos(evt) {
     var rect = canvas.getBoundingClientRect();
@@ -192,16 +215,18 @@ function getObjOnjanela(matrizJanela) {
 
 function multiplyMatrices(m1, m2) {
     var result = [];
-    for (var i = 0; i < m1.length; i++) {
-        result[i] = [];
-        for (var j = 0; j < m2[0].length; j++) {
-            var sum = 0;
-            for (var k = 0; k < m1[0].length; k++) {
-                sum += m1[i][k] * m2[k][j];
+    try{
+        for (var i = 0; i < m1.length; i++) {
+            result[i] = [];
+            for (var j = 0; j < m2[0].length; j++) {
+                var sum = 0;
+                for (var k = 0; k < m1[0].length; k++) {
+                    sum += m1[i][k] * m2[k][j];
+                }
+                result[i][j] = sum;
             }
-            result[i][j] = sum;
         }
-    }
+    } catch(err) {}
     return result;
 }
 
@@ -267,7 +292,7 @@ function addListners() {
             alert("Selecione um desenho para calcular.");
             return;
         }
-        transladarObjetos(100, 2, objSelecionado.matriz, objSelecionado.type);
+        transladarObjetos(dX, dY, objSelecionado.matriz, objSelecionado.type);
         objSelecionado = undefined;
     });
 
@@ -276,7 +301,7 @@ function addListners() {
             alert("Selecione um desenho para calcular.");
             return;
         }
-        mEscala(2, 2, objSelecionado.matriz, objSelecionado.type);
+        mEscala(sX, sY, objSelecionado.matriz, objSelecionado.type);
         objSelecionado = undefined;
     });
 
@@ -285,7 +310,7 @@ function addListners() {
             alert("Selecione um desenho para calcular.");
             return;
         }
-        rotacionarObjetos(90, objSelecionado, objSelecionado.type);
+        rotacionarObjetos(graus, objSelecionado, objSelecionado.type);
         objSelecionado = undefined;
     });
 
@@ -299,9 +324,12 @@ function addListners() {
             alert("BELEZA");
             var objNaJanela = [];
             objNaJanela = getObjOnjanela(janela.matriz);
+            if(!objNaJanela){
+                objNaJanela = [];
+            }
             //console.log(objNaJanela);
             
-            zoomExtend(janela.matriz, objNaJanela.type, objNaJanela);
+            zoomExtend(janela.matriz, objNaJanela);
             
             janela = undefined;
             objAsjanela = false;

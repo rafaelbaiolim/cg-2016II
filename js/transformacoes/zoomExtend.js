@@ -13,11 +13,28 @@
 // 	var R = this.largura / this.altura;
 // }
 
+function getMaxOfObjs(objs){
+	var maior =  [];
+	var menor = [];
+	for(var i in objs){
+		maior.push(pegaMaiorPonto(objs[i]));
+		menor.push(pegaMenorPonto(objs[i]));
+	}
+	return {
+	  	menor:	Math.min.apply(null,menor),
+	 	maior:	Math.max.apply(null,maior)
+	};
+}
 
-function zoomExtend(janela, tipo, ListaObj) {
+
+
+
+function zoomExtend(janela, ListaObj) {
 	
 	var menores = pegaMenorPonto(janela);
 	var maiores = pegaMaiorPonto(janela);
+
+	var MaiorMenor = getMaxOfObjs(ListaObj);
 
 	var xmin = menores.dx, 
     	ymin = menores.dy,
@@ -41,76 +58,104 @@ function zoomExtend(janela, tipo, ListaObj) {
 	clearCanvas();
 		
 	
-	for(var i in ListaObj){
-		var result = multiplyMatrices(tJanelaViewport, ListaObj[i].matriz);
-		
-		result.type = ListaObj[i].type;
-		
-		console.table(result);
 
-		desenha(result, result.type)
+	if(ListaObj.length > 0){
+		for(var i in ListaObj){
+			var result = multiplyMatrices(tJanelaViewport, ListaObj[i].matriz);
+			
+			desenha(result, ListaObj[i].type);
+			
+			mapeamentoCentro(result, ListaObj[i].type, this.janela, MaiorMenor);
+			
+		}
 	}
-	console.log("quantidade");
-	console.log(draws);
-
-	//mapeamentoCentro(janela.matriz, result, result.type);
-	
-	
-
+	//console.log("quantidade");
+	//console.log(draws);
 }
-function mapeamentoCentro(janela, mObj, tipo){
-	//calcular a proporcao Ratio da Janela e da Viewport
 
-	var menores = pegaMenorPonto(janela);
-	var maiores = pegaMaiorPonto(janela);
+
+
+function mapeamentoCentro(mobj, tipo, janela,MaiorMenor) {
+	//calcular a proporcao Ratio da Janela e da Viewport
+//	var menores = pegaMenorPonto(janela);
+//	var maiores = pegaMaiorPonto(janela);
+	var menores = pegaMenorPonto(MaiorMenor.menor);
+	var maiores = pegaMaiorPonto(MaiorMenor.maior);
 
 	var result;
 	
-    var xmin = 0, 
-    	ymin = 0,
+    var xmin = menores.dx, 
+    	ymin = menores.dy,
     	xmax = maiores.dx,
     	ymax = maiores.dy;
-	
-	
+
+	console.log("xmin"+xmin);
+	console.log("ymin"+ymin);
+
+	console.log("xmax"+xmax);
+	console.log("ymax"+ymax);
+
 	var uMax = canvas.width,
         vMax = canvas.height;
     
-    var sx = (uMax - 0) / (xmax - xmin),
-		sy = (vMax - 0) / (ymax - ymin);
-	//Aspect Ratio
-	var rw = (xmax-xmin)/(ymax - xmin);
-	var rv = (uMax-0)/(vMax - 0);
+    console.log("uMax "+uMax);
+    console.log("vMax "+vMax);
+
+    var rw = (xmax - xmin)/(ymax - ymin);
+	
+	var rv = uMax/vMax;
+
+	var uMaxNovo = 0;
+
+	var vMaxNovo = 0;
+
 	//se rw>rv
-	var vMaxNovo = ((uMax-0)/rw)+0;
+	 if(rw > rv){ 
+	 	vMaxNovo = (uMax/rw);
+	 	console.log("vMaxNovo "+vMaxNovo);
+	}
 	//se rw<rv
-	var uMaxNovo = (rw * (vMax-0))+0;
+	if(rw < rv){ 
+		uMaxNovo = rw * vMax;
+		console.log("uMaxNovo "+uMaxNovo);
+	}
 
+	var tHorizontal = (uMax-uMaxNovo)/2;
+	var tVertical= (vMax-vMaxNovo)/2;
+	
+	console.log("H " + tHorizontal);
+	//console.log("V"+tVertical);
 
-	var translacaoVertical = [ [sx, 0, -sx*xmin],
-	 						   [0,-sy, sy*ymin - ((vMax-vMaxNovo)/2)],
-	 							[0, 0, 1]];
+	var translacaoVertical = [ [1, 0, 0],
+	  						   [0, 1, tVertical],
+	  						   [0, 0, 1]];
 
-	var translacaoHorizontal = [[sx, 0, sx*xmin - ((uMax-uMaxNovo)/2)],
-	 						   [0, -sy, -sy*ymin],
+	var translacaoHorizontal = [[1, 0, tHorizontal],
+	 						   [0, 1, 0],
 	 						   [0, 0, 1]];
-		
+	
 	//transladar para o centro
-	clearCanvas();
-		
+	
 	
 	if(rw > rv){ 
+		console.log("maior");
 		//ajustar pela altura
-		result = (translacaoVertical, mObj);
-		result.type = tipo;
-		desenha(result, result.type);
+
+		result = multiplyMatrices(translacaoVertical, mobj);
+		console.table(result);
+		clearCanvas();
+		desenha(result, tipo);
 
 	}
 	if(rw < rv){
+		console.log("menor");
 		//ajustar pela largura
-		result = (translacaoHorizontal, mObj);
-		result.type = tipo;
-		desenha(result, result.type);
-	}	   		
+		result = multiplyMatrices(translacaoHorizontal, mobj);
+		console.table(result);
+		clearCanvas();
+		desenha(result, tipo);
+	}	
+	console.log("------------------------");   	
 	
 
 	
