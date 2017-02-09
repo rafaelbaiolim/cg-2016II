@@ -22,7 +22,6 @@ function rotacionarObjetos(graus, indexObj, mObj, tipo) {
     var result = multiplyMatrices(R, mObj);
     clearCanvas(indexObj);
 
-
     desenha(result, tipo);
 
 }

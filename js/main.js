@@ -139,7 +139,6 @@ function getObjOnjanela(matrizJanela) {
         }
     }
     memo = [[], []];
-
     return objNaJanela;
 
 }
@@ -151,10 +150,10 @@ function desenha(result, tipo) {
         addDotToCanvas(result[0][1], result[1][1]);
 
         var linha = new Line({
-            xO: pontos[0].posX,
-            yO: pontos[0].posY,
-            xD: pontos[1].posX,
-            yD: pontos[1].posY,
+            xO: result[0][0],
+            yO: result[1][0],
+            xD: result[0][1],
+            yD: result[1][1],
 
         }).draw();
         draws.push(linha);
@@ -242,7 +241,6 @@ function addListners() {
 
         showLoadCursor();
         var indexObj = draws.indexOf(objSelecionado);
-        alert(indexObj);
         mEscala(sX, sY, indexObj, objSelecionado.matriz, objSelecionado.type);
         showDefaultCursor();
         objSelecionado = undefined;
@@ -374,7 +372,6 @@ function addListners() {
                 return true;
             }
         }
-
 
         if (drawType == "TRIANGULO") {
             if (pontos.length >= 2) {
@@ -631,7 +628,7 @@ function clearCanvas(clearIndex) {
         draws = [];
     } else {
         draws.splice(clearIndex, 1);
-        reDrawCtrlZ();
+        reDrawCtrlZ(true);
     }
 
 }

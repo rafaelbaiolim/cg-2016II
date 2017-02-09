@@ -1,4 +1,4 @@
-function transladarObjetos(dx, dy,indexObj, mObj, tipo) {
+function transladarObjetos(dx, dy, indexObj, mObj, tipo) {
     var mT = [
         [1, 0, dx],
         [0, 1, dy],
