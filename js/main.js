@@ -117,27 +117,29 @@ function getObjOnjanela(matrizJanela) {
     var minY = Math.min.apply(null, matrizJanela[1]);
     var maxX = Math.max.apply(null, matrizJanela[0]);
     var maxY = Math.max.apply(null, matrizJanela[1]);
-
-    var memo = [[], []];
-    inicializarMemo(memo, minX, maxX, minY, maxY);
-
-    var objNaJanela = [];
-    var obj = false;
-    for (var i = minX; i < maxX; i++) {
-        for (var j = minY; j < maxY; j++) {
-            obj = procurarObjPorInterseccao(i, j);
-            if (obj) {
-                if (obj.matriz) {
-                    var x = obj.matriz[0][0];
-                    var y = obj.matriz[0][1];
-                    if (!memo[x][y]) {
-                        memo[x][y] = true;
-                        objNaJanela.push(obj);
+    try {
+        var memo = [[], []];
+        inicializarMemo(memo, minX, maxX, minY, maxY);
+        var objNaJanela = [];
+        var obj = false;
+        for (var i = minX; i < maxX; i++) {
+            for (var j = minY; j < maxY; j++) {
+                obj = procurarObjPorInterseccao(i, j);
+                if (obj) {
+                    if (obj.matriz) {
+                        var x = obj.matriz[0][0];
+                        var y = obj.matriz[0][1];
+                        if (!memo[x][y]) {
+                            memo[x][y] = true;
+                            objNaJanela.push(obj);
+                        }
                     }
                 }
             }
         }
+    } catch (err) {
     }
+    ;
     memo = [[], []];
     return objNaJanela;
 
