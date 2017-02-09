@@ -33,16 +33,26 @@ ul li{
     margin-right: 13px;
 }
 
+.btn.btn-translacao{
+    font-size: 78%;
+}
+
+.btn.btn-zoom{
+    font-size: 75%;
+}
+
+
+
 .right-panel{
     margin-top:18px;
 }
 
 .top-menu{
-    margin-left:5%;
+    margin-left:15.5%;
 }
 
 .container{
-    width: 800px;
+    width: 1024px;
     clear: both;
     margin: 0 auto;
 }
@@ -109,3 +119,4 @@ canvas {
     color:white;
     cursor: default;
 }
+

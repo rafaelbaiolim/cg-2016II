@@ -56,8 +56,8 @@ $(document).ready(function () {
         hideAllFields();
         $("#canvasAttr").html(
                 "Canvas (px) : " +
-                canvas.height + " x " +
-                canvas.width);
+                canvas.width + " x " +
+                canvas.height);
     }
 
 
