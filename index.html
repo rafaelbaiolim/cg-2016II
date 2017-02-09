@@ -10,125 +10,161 @@
         <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
     </head>
     <body>  
-        <div class="container"> 
-            <div class="header">
-                <!-- Computação Gráfica 2017 - Informática 
-                    Rafael Lucas     ra.:83021 
-                    Vanessa Nakahara ra.:83021 
-                -->
+        <div class="wrapper">
+
+            <div class="container-info">
+                Informações <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <hr>
+                <div class="info-text">
+                    <p> 
+                        <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+                        Para selecionar uma figura desenhada, clique em um dos seus pontos.
+                    </p>
+                    <p> 
+                        <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+                        A rotação é sempre em torno do menor ponto da figura.
+                    </p>
+                    <p> 
+                        <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+                        Para utilizar o Zoom Extend, é necessário selecionar a janela
+                        do Zoom após clicar na ferramenta.
+                    </p>
+                    <p> 
+                        <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+                        O tempo de processamento do Zoom Extend, é proporcional 
+                        ao tamanho da janela escolhida.
+                    </p>
+                    <hr>
+                    <p>
+                        Rafael  .A&nbsp;&nbsp;&nbsp;&nbsp;| ra.:83021
+                        Vanessa .N | ra.:83550
+                    </p>
+                </div>
             </div>
-            <div class="top-menu">
-                <button class="btn btn-menu" onclick="clearCanvas()">
-                    <i class="fa fa-eraser" aria-hidden="true"></i> Clear 
-                </button>
 
-                <button id="btnRotacao" class="btn btn-menu">
-                    <i class="fa fa-circle-o-notch" aria-hidden="true"></i> Rotação
-                </button>
+            <div class="container">                 
+                <div class="header">
+                    <!-- Computação Gráfica 2017 - Informática 
+                        Rafael Lucas     ra.:83021 
+                        Vanessa Nakahara ra.:83021 
+                    -->
+                </div>
+                <div class="top-menu">
+                    <button class="btn btn-menu" onclick="clearCanvas()">
+                        <i class="fa fa-eraser" aria-hidden="true"></i> Clear 
+                    </button>
 
-                <button id="btnMudanca" class="btn btn-menu">
-                    <i class="fa fa-expand" aria-hidden="true"></i> M.Escala
-                </button>
+                    <button id="btnRotacao" class="btn btn-menu">
+                        <i class="fa fa-circle-o-notch" aria-hidden="true"></i> Rotação
+                    </button>
 
-                <button id="btnTranslacao" class="btn btn-menu btn-translacao">
-                    <i class="fa fa-crosshairs" aria-hidden="true"></i> Translação
-                </button>
+                    <button id="btnMudanca" class="btn btn-menu">
+                        <i class="fa fa-expand" aria-hidden="true"></i> M.Escala
+                    </button>
 
-                <button id="btnExtend" class="btn btn-menu btn-zoom">
-                    <i class="fa fa-search-plus" aria-hidden="true"></i> Z.Extend
-                </button>
-            </div>
+                    <button id="btnTranslacao" class="btn btn-menu btn-translacao">
+                        <i class="fa fa-crosshairs" aria-hidden="true"></i> Translação
+                    </button>
 
-            <div class="left-menu">
-                <ul>
-                    <li>
-                        <button id="tipoLinha" class="btn btn-menu" onclick="setDrawType('LINHA', 'tipoLinha')">
-                            <img src="img/line.png" height="30" width="50">
-                        </button>
-                    </li>
-                    <li>
-                        <button id="tipoRetangulo" class="btn btn-menu" onclick="setDrawType('RETANGULO', 'tipoRetangulo')">
-                            <img src="img/rectangle.png" height="30" width="50">
-                        </button>
-                    </li>
-                    <li>
-                        <button id="tipoTriangulo" class="btn btn-menu" onclick="setDrawType('TRIANGULO', 'tipoTriangulo')">
-                            <img src="img/triangle.png" height="30" width="50">
-                        </button>
-                    </li>
-                    <li>
-                        <div class="coord-wrap">
-                            <small> Posição Atual </small>
+                    <button id="btnExtend" class="btn btn-menu btn-zoom">
+                        <i class="fa fa-search-plus" aria-hidden="true"></i> Z.Extend
+                    </button>
+                </div>
+
+                <div class="left-menu">
+                    <ul>
+                        <li>
+                            <button id="tipoLinha" class="btn btn-menu" onclick="setDrawType('LINHA', 'tipoLinha')">
+                                <img src="img/line.png" height="30" width="50">
+                            </button>
+                        </li>
+                        <li>
+                            <button id="tipoRetangulo" class="btn btn-menu" onclick="setDrawType('RETANGULO', 'tipoRetangulo')">
+                                <img src="img/rectangle.png" height="30" width="50">
+                            </button>
+                        </li>
+                        <li>
+                            <button id="tipoTriangulo" class="btn btn-menu" onclick="setDrawType('TRIANGULO', 'tipoTriangulo')">
+                                <img src="img/triangle.png" height="30" width="50">
+                            </button>
+                        </li>
+                        <li>
+                            <div class="coord-wrap">
+                                <small> Posição Atual </small>
+                            </div>
+                            <div class="coord-wrap">
+                                <input disabled id="coord-x" placeholder="x"/>
+                            </div>
+
+                            <div class="coord-wrap">
+                                <input disabled id="coord-y" placeholder="y"/>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="right-panel">
+                    <canvas id="board" width="780" height="430"></canvas>
+                    <center>
+                        <small><span id="canvasAttr"></span></small> |
+                        <small> Utilize "<b>ctrl + z</b>" para apagar o último desenho. </small>
+                    </center>
+                </div>
+
+                <div id="areaZoom" class="right-col">
+                    <center>
+                        <br>
+                        <div class="coord-wrap-title">
+                            <small> <b> ZOOM EXTEND </b> </small>
                         </div>
-                        <div class="coord-wrap">
-                            <input disabled id="coord-x" placeholder="x"/>
+                        <br>
+                        <button type="button" class="btn btn-zoom" id="calcZoomExtend"> Criar Seleção </button>
+                    </center>
+                </div>
+
+                <div id="areaTranslacao" class="right-col">
+                    <center>
+                        <br>
+                        <div class="coord-wrap-title">
+                            <small> <b> DESLOCAMENTO </b></small>
                         </div>
+                        <input id="deslocDx" placeholder="dX"/>
+                        <input id="deslocDy" placeholder="dY"/>
+                        <br><br>
+                        <button type="button" class="btn" id="calcTranslacao"> Calcular </button>
+                    </center>
+                </div>
 
-                        <div class="coord-wrap">
-                            <input disabled id="coord-y" placeholder="y"/>
+                <div id="areaEscala" class="right-col">
+                    <center>
+                        <br>
+                        <div class="coord-wrap-title">
+                            <small> <b> MUDANÇA DE ESCALA </b></small>
                         </div>
-                    </li>
-                </ul>
+                        <input id="escalaSx" placeholder="sX"/>
+                        <input id="escalaSy" placeholder="sY"/>
+                        <br><br>
+                        <button type="button" class="btn" id="calcMEscala"> Calcular </button>
+                    </center>
+                </div>
+
+                <div id="areaRotacao" class="right-col">
+                    <center>
+                        <br>
+                        <div class="coord-wrap-title">
+                            <small> <b> ROTAÇÃO </b></small>
+                        </div>
+                        <input id="grausRotacao" placeholder="Grau da rotação"/>
+
+                        <br><br>
+                        <button type="button" class="btn" id="calcRotacao"> Calcular </button>
+                    </center>
+                </div>
+
             </div>
 
-            <div class="right-panel">
-                <canvas id="board" width="780" height="380"></canvas>
-                <center>
-                    <small><span id="canvasAttr"></span></small> |
-                    <small> Utilize "<b>ctrl + z</b>" para apagar o último desenho. </small>
-                </center>
-            </div>
-
-            <div id="areaZoom" class="right-col">
-                <center>
-                    <br>
-                    <div class="coord-wrap-title">
-                        <small> <b> ZOOM EXTEND </b> </small>
-                    </div>
-                    <br>
-                    <button type="button" class="btn btn-zoom" id="calcZoomExtend"> Criar Seleção </button>
-                </center>
-            </div>
-
-            <div id="areaTranslacao" class="right-col">
-                <center>
-                    <br>
-                    <div class="coord-wrap-title">
-                        <small> <b> DESLOCAMENTO </b></small>
-                    </div>
-                    <input id="deslocDx" placeholder="dX"/>
-                    <input id="deslocDy" placeholder="dY"/>
-                    <br><br>
-                    <button type="button" class="btn" id="calcTranslacao"> Calcular </button>
-                </center>
-            </div>
-
-            <div id="areaEscala" class="right-col">
-                <center>
-                    <br>
-                    <div class="coord-wrap-title">
-                        <small> <b> MUDANÇA DE ESCALA </b></small>
-                    </div>
-                    <input id="escalaSx" placeholder="sX"/>
-                    <input id="escalaSy" placeholder="sY"/>
-                    <br><br>
-                    <button type="button" class="btn" id="calcMEscala"> Calcular </button>
-                </center>
-            </div>
-
-            <div id="areaRotacao" class="right-col">
-                <center>
-                    <br>
-                    <div class="coord-wrap-title">
-                        <small> <b> ROTAÇÃO </b></small>
-                    </div>
-                    <input id="grausRotacao" placeholder="Grau da rotação"/>
-
-                    <br><br>
-                    <button type="button" class="btn" id="calcRotacao"> Calcular </button>
-                </center>
-            </div>
         </div>
+
 
         <script type="text/javascript" src="js/utils/jquery.js"></script>
 

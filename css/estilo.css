@@ -41,8 +41,6 @@ ul li{
     font-size: 75%;
 }
 
-
-
 .right-panel{
     margin-top:18px;
 }
@@ -51,24 +49,39 @@ ul li{
     margin-left:15.5%;
 }
 
+.wrapper{
+    width: 1280px;
+    clear: both;
+    position: absolute;
+}
+
 .container{
     width: 1024px;
-    clear: both;
-    margin: 0 auto;
+    margin-left:130px;
+}
+
+.container-info{
+    float: left;
+    width: 150px;
+    height: 100%;
+    padding-right: 5px;
+    background: #f9f9f9;
+    position: absolute;
+    font-family: Tahoma,Verdana,Segoe,sans-serif;
+}
+
+.info-text{
+    font-family: Tahoma,Verdana,Segoe,sans-serif;
+    font-size: 13px;
+    text-align: left;
 }
 
 .left-menu{
     float:left;
 }
 
-
-.right-panel{
-    float: rigth;
-}
-
 canvas {
     border: 1px solid black; 
-    /*border-radius: 2%;*/
 }
 
 .coord-wrap{
@@ -125,3 +138,6 @@ canvas {
     cursor: default;
 }
 
+.fa-info-circle{
+    color:#3333ff;
+}

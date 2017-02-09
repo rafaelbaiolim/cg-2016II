@@ -326,6 +326,8 @@ function addListners() {
 
         if (objSelecionado) {
             setObjSelecionado();
+            resetPontos();
+
         } else {
             addDotToCanvas();
         }
@@ -361,6 +363,7 @@ function addListners() {
 
         if (drawType == "SELECAO") {
             if (pontos.length >= 2) {
+                janela = undefined;
                 var retangulo = new Rectangle(
                         {
                             p0: pontos[0],
@@ -369,7 +372,6 @@ function addListners() {
                         }).draw();
                 janela = retangulo;
                 resetPontos();
-                return true;
             }
         }
 
@@ -727,7 +729,6 @@ function Circle(props) {
         ctx.arc(this.obj.posX,
                 this.obj.posY,
                 this.obj.radius, 0, 2 * Math.PI);
-        ctx.fillText("(" + this.obj.posX + "," + this.obj.posY + ")", this.obj.posX, this.obj.posY);
         ctx.fill();
         return this.obj;
     }
