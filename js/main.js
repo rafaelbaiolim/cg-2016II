@@ -160,13 +160,13 @@ function desenha(result, tipo) {
     }
 
     if (tipo == "RETANGULO") {
-        addDotToCanvas(result[0][0], result[1][0]);
-        addDotToCanvas(result[0][2], result[1][2]);
+        var pi = addDotToCanvas(result[0][0], result[1][0]);
+        var pii = addDotToCanvas(result[0][2], result[1][2]);
 
         var retangulo = new Rectangle(
                 {
-                    p1: pontos[1],
-                    p0: pontos[0],
+                    p0: pi,
+                    p1: pii,
 
                 }).draw();
 
@@ -175,16 +175,14 @@ function desenha(result, tipo) {
     resetPontos();
 
     if (tipo == "TRIANGULO") {
-        addDotToCanvas(result[0][0], result[1][0]);
-        addDotToCanvas(result[0][1], result[1][1]);
 
-        console.log(result[0][0]);
-        console.log(result[1][0]);
+        var pi = addDotToCanvas(result[0][0], result[1][0]);
+        var pii = addDotToCanvas(result[0][1], result[1][1]);
 
         var triangulo = new Triangle(
                 {
-                    p1: pontos[1],
-                    p0: pontos[0],
+                    p0: pi,
+                    p1: pii,
 
                 }).draw();
 
@@ -652,6 +650,7 @@ function addDotToCanvas(coordX, coordY, propFill) {
         fill: propFill,
     }).draw();
     pontos.push(ponto);
+    return ponto;
 }
 
 /**
