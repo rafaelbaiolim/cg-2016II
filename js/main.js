@@ -83,8 +83,8 @@ function construct() {
 function setMouseLabels() {
     var coordX = document.getElementById('coord-x');
     var coordY = document.getElementById('coord-y');
-    coordX.value = coordAtual.x;
-    coordY.value = coordAtual.y;
+    coordX.value = Math.floor(coordAtual.x);
+    coordY.value = Math.floor(coordAtual.y);
 
 }
 
