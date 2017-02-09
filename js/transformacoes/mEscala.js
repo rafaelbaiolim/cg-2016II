@@ -1,7 +1,7 @@
-function mEscala(sx, sy,indexObj, mObj, tipo) {
+function mEscala(sx, sy, indexObj, mObj, tipo) {
     var menores = pegaMenorPonto(mObj);
-    console.log(sx);
-    console.log(sy);
+    (sx === 0 ? 1 : sx);
+    (sy === 0 ? 1 : sy);
 
     var dx = menores.dx, dy = menores.dy;
 
