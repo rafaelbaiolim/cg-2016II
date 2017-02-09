@@ -31,10 +31,24 @@ $(document).ready(function () {
     }
 
     /**
+     * Limpa todos os campos de forms preenchidos
+     * @returns {undefined}
+     */
+    function clearInputs() {
+        setDrawType("LINHA", "tipoLinha");
+        document.getElementById("deslocDx").value = "";
+        document.getElementById("deslocDy").value = "";
+        document.getElementById("escalaSx").value = "";
+        document.getElementById("escalaSy").value = "";
+        document.getElementById("grausRotacao").value = "";
+    }
+
+    /**
      * 
      * @returns {undefined}
      */
     function ativarBotao(idBtn) {
+        clearInputs();
         ativarBtnDrawsType();
         removerBtnAtivo();
         $("#" + idBtn).addClass(classBtnAtivo);
@@ -54,10 +68,6 @@ $(document).ready(function () {
 
     function construtor() {
         hideAllFields();
-        $("#canvasAttr").html(
-                "Canvas (px) : " +
-                canvas.width + " x " +
-                canvas.height);
     }
 
 
@@ -82,33 +92,8 @@ $(document).ready(function () {
         ativarBotao(btnExtend.attr("id"));
     });
 
-
 });
 
-
-/**
- * Informa qual campo deve ser informado para 
- * prosseguir
- * @returns {undefined}
- */
-function alertProsseguir(campo) {
-    alert("Informe " + campo + " para prosseguir");
-}
-
-/**
- * Mostra o cursor de espera no canvas
- */
-function showLoadCursor() {
-    $(".container").css("cursor", "wait");
-}
-
-
-/**
- * Mostra o cursor de espera no canvas
- */
-function showDefaultCursor() {
-    $(".container").css("cursor", "default");
-}
 
 /**
  * Desativa os botões de desenho para o zoom

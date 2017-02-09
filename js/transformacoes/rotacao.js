@@ -1,8 +1,8 @@
-function rotacionarObjetos(graus, mObj, tipo) {
+function rotacionarObjetos(graus, indexObj, mObj, tipo) {
     var menores = pegaMenorPonto(mObj);
-    
+
     console.log(menores);
-    
+
     var dx = menores.dx, dy = menores.dy;
 
     console.log(dx);
@@ -20,9 +20,9 @@ function rotacionarObjetos(graus, mObj, tipo) {
     ];
 
     var result = multiplyMatrices(R, mObj);
-    clearCanvas();
+    clearCanvas(indexObj);
 
-    
+
     desenha(result, tipo);
 
 }

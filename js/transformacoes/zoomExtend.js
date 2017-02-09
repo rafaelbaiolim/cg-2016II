@@ -1,22 +1,20 @@
-function zoomExtend(janela, ListaObj) {
+function zoomExtend(janela, listaObj) {
 
     var menores = pegaMenorPonto(janela);
     var maiores = pegaMaiorPonto(janela);
 
-    var MaiorMenor = getMaxOfObjs(ListaObj);
+    var MaiorMenor = getMaxOfObjs(listaObj);
 
     var xmin = menores.dx,
             ymin = menores.dy,
             xmax = maiores.dx,
             ymax = maiores.dy;
 
-
-    var uMax = canvas.width,
-            vMax = canvas.height;
+    var uMax = canvas.width
+    var vMax = canvas.height;
 
     var sx = (uMax - 0) / (xmax - xmin),
             sy = (vMax - 0) / (ymax - ymin);
-
 
     var tJanelaViewport = [
         [sx, 0, (-sx * xmin)],
@@ -26,15 +24,13 @@ function zoomExtend(janela, ListaObj) {
 
     clearCanvas();
 
+    if (listaObj.length > 0) {
+        for (var i in listaObj) {
+            var result = multiplyMatrices(tJanelaViewport, listaObj[i].matriz);
 
+            desenha(result, listaObj[i].type);
 
-    if (ListaObj.length > 0) {
-        for (var i in ListaObj) {
-            var result = multiplyMatrices(tJanelaViewport, ListaObj[i].matriz);
-
-            desenha(result, ListaObj[i].type);
-
-            mapeamentoCentro(result, ListaObj[i].type, this.janela, MaiorMenor);
+            mapeamentoCentro(result, listaObj[i].type, this.janela, MaiorMenor);
 
         }
     }

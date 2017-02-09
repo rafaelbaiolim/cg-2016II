@@ -68,6 +68,10 @@ function construct() {
     fixYAbs();
     document.onkeydown = KeyPress;
     setDrawType("LINHA", 'tipoLinha');
+    if (canvas) {
+        $("#canvasAttr").html("Canvas (px) : " + canvas.width +
+                " x " + canvas.height);
+    }
 
     btnCalcularTranslacao = document.getElementById("calcTranslacao");
     btnCalcularMEscala = document.getElementById("calcMEscala");
@@ -186,12 +190,8 @@ function desenha(result, tipo) {
                 }).draw();
 
         resetPontos();
-
         draws.push(triangulo);
-
-
     }
-
 }
 
 function addListners() {
@@ -215,7 +215,8 @@ function addListners() {
         }
 
         showLoadCursor();
-        transladarObjetos(dX, dY, objSelecionado.matriz, objSelecionado.type);
+        var indexObj = draws.indexOf(objSelecionado);
+        transladarObjetos(dX, dY, indexObj, objSelecionado.matriz, objSelecionado.type);
         showDefaultCursor();
 
         objSelecionado = undefined;
@@ -240,7 +241,9 @@ function addListners() {
         }
 
         showLoadCursor();
-        mEscala(sX, sY, objSelecionado.matriz, objSelecionado.type);
+        var indexObj = draws.indexOf(objSelecionado);
+        alert(indexObj);
+        mEscala(sX, sY, indexObj, objSelecionado.matriz, objSelecionado.type);
         showDefaultCursor();
         objSelecionado = undefined;
     });
@@ -257,7 +260,8 @@ function addListners() {
             return;
         }
         showLoadCursor();
-        rotacionarObjetos(graus, objSelecionado.matriz, objSelecionado.type);
+        var indexObj = draws.indexOf(objSelecionado);
+        rotacionarObjetos(graus, indexObj, objSelecionado.matriz, objSelecionado.type);
         showDefaultCursor();
         objSelecionado = undefined;
     });
@@ -284,7 +288,7 @@ function addListners() {
 
             janela = undefined;
             objAsjanela = false;
-            removeLastObj(true);//apenas redesenha o canvas sem a janela
+            reDrawCtrlZ(true);//apenas redesenha o canvas sem a janela
             showDefaultCursor();
             firstClick = -1;
             $("#calcZoomExtend").html("Criar Seleção");
@@ -391,7 +395,7 @@ function addListners() {
 function KeyPress(e) {
     var evtobj = window.event ? event : e
     if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
-        removeLastObj();
+        reDrawCtrlZ();
         resetPontos();
     }
 }
@@ -445,12 +449,23 @@ function setObjSelecionado(pSelecionado) {
 
 }
 
+/**
+ * Apaga apenas o canvas, mantém os pontos
+ * @returns {undefined}
+ */
 function clearOnlyDrawScreen() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     pontos = [];
 }
 
-function removeLastObj(justReDraw) {
+/**
+ * Re-desenha / Apaga o ultimo desenho
+ * @param {type} justReDraw 
+ * if TRUE -> apenas redesenha
+ * else -> remove o ultimo desenho
+ * @returns {undefined}
+ */
+function reDrawCtrlZ(justReDraw) {
     if (draws.length <= 0) {
         return;
     }
@@ -480,6 +495,11 @@ function removeLastObj(justReDraw) {
     }
 }
 
+/**
+ * Shape Triângulo
+ * @param {type} props
+ * @returns {Triangle}
+ */
 function Triangle(props) {
     this.obj = {};
     this.obj.type = "TRIANGULO";
@@ -501,10 +521,7 @@ function Triangle(props) {
         yD: props.p1.posY
     }).draw();
 
-    //addDotToCanvas(this.linha1.posXD, this.linha1.posYD);
-
     this.obj.linhas.push(this.linha1);
-
     this.linha2 = new Line({
 
         xO: this.linha1.posXD,
@@ -515,11 +532,8 @@ function Triangle(props) {
     }).draw();
 
     addDotToCanvas(this.linha2.posXD, this.linha2.posYD, props.fill);
-
     this.obj.linhas.push(this.linha2);
-
     this.linha3 = new Line({
-
         xO: this.linha1.posXO,
         yO: this.linha2.posYD,
         xD: this.linha1.posXO,
@@ -527,27 +541,17 @@ function Triangle(props) {
 
     }).draw();
 
-    //addDotToCanvas(this.linha3.posXD, this.linha3.posYD);
-
-
     this.obj.linhas.push(this.linha3);
-
-
-
     this.obj.matriz.push([this.linha1.posXO, this.linha1.posXD, this.linha2.posXD, ]);
     this.obj.matriz.push([this.linha1.posYO, this.linha1.posYD, this.linha2.posYD, ]);
     this.obj.matriz.push([1, 1, 1]);
-
-    console.table(this.obj.matriz);
     this.draw = function () {
         return this.obj;
     }
 }
 
 /**
- * Função para desenho de linha
- * @param {type} props
- * @returns {Rectangle}
+ * Shape Retangulo
  */
 function Rectangle(props) {
 
@@ -607,12 +611,10 @@ function Rectangle(props) {
     }).draw();
     this.obj.linhas.push(this.linha4);
 
-
     this.obj.matriz.push([this.linha1.posXO, this.linha1.posXD, this.linha2.posXD, this.linha4.posXO]);
     this.obj.matriz.push([this.linha1.posYO, this.linha1.posYD, this.linha2.posYD, this.linha4.posYO]);
     this.obj.matriz.push([1, 1, 1, 1]);
 
-    //console.table(this.obj.matriz);
     this.draw = function () {
         return this.obj;
     }
@@ -622,10 +624,15 @@ function Rectangle(props) {
  * Limpa a área do canvas
  * @returns {undefined}
  */
-function clearCanvas() {
-    draws = [];
+function clearCanvas(clearIndex) {
     pontos = [];
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!clearIndex) {
+        draws = [];
+    } else {
+        draws.splice(clearIndex, 1);
+        reDrawCtrlZ();
+    }
 
 }
 
@@ -650,7 +657,11 @@ function addDotToCanvas(coordX, coordY, propFill) {
     pontos.push(ponto);
 }
 
-
+/**
+ * Shape Linha
+ * @param {type} props
+ * @returns {Line}
+ */
 function Line(props) {
     this.obj = {};
     this.obj.type = "LINHA";
@@ -723,4 +734,30 @@ function Circle(props) {
         return this.obj;
     }
 
+}
+
+
+
+/**
+ * Informa qual campo deve ser informado para 
+ * prosseguir
+ * @returns {undefined}
+ */
+function alertProsseguir(campo) {
+    alert("Informe " + campo + " para prosseguir");
+}
+
+/**
+ * Mostra o cursor de espera no canvas
+ */
+function showLoadCursor() {
+    $(".container").css("cursor", "wait");
+}
+
+
+/**
+ * Mostra o cursor de espera no canvas
+ */
+function showDefaultCursor() {
+    $(".container").css("cursor", "default");
 }
