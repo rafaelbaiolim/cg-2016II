@@ -6,7 +6,7 @@ function transladarObjetos(dx, dy, mObj, tipo) {
     ];
     var result = multiplyMatrices(mT, mObj);
     clearCanvas();
-		
-	desenha(result, tipo);
+
+    desenha(result, tipo);
 
 }

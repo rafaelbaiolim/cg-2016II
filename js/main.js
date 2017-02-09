@@ -15,12 +15,6 @@ var btnCalcularRotacao;
 var btnCalcularZoomExtend;
 var objSelecionado;
 
-
-var btnRotacao;
-var btnMudanca;
-var btnTranslacao;
-var btnExtend;
-
 var areaZoom;
 var areaTranslacao;
 var areaEscala;
@@ -62,14 +56,6 @@ function setDrawType(drawTp, idElemento) {
     resetPontos();
 }
 
-function fixYAbs() {
-    ctx.transform(1, 0, 0, -1, 0, canvas.height);
-}
-
-function defaultYAbs() {
-    ctx.transform(1, 1, 0, 1, 0, 0);
-}
-
 function construct() {
     canvas = document.getElementById('board');
     ctx = canvas.getContext('2d');
@@ -81,32 +67,7 @@ function construct() {
     btnCalcularMEscala = document.getElementById("calcMEscala");
     btnCalcularRotacao = document.getElementById("calcRotacao");
     btnCalcularZoomExtend = document.getElementById("calcZoomExtend");
-    
-    dX = $("#trX").val();
-    dY = $("#trY").val();
-    sX = $("#sX").val();
-    sY = $("#sY").val();
-    graus = $("#graus").val();
-    console.log(graus);
 
-
-
-//    for (var j = 10; j < 500; j += 22) {
-//        for (var i = 10; i < 500; i += 20) {
-//            var c1 = new Circle({x: i, y: j, radius: 6, fill: "blue"}).draw();
-//        }
-//    }
-    //stage.update();
-}
-
-$("#idBotao").on("click", function(){ //pego o valor dos forms aqui });
-
-function getMousePos(evt) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-        x: evt.clientX - rect.left,
-        y: (evt.clientY - rect.bottom) * -1
-    };
 }
 
 function setMouseLabels() {
@@ -116,59 +77,6 @@ function setMouseLabels() {
     coordY.value = coordAtual.y;
 
 }
-
-function resetPontos() {
-    pontos = [];
-}
-
-/**
- * Procura se já existe um valor no array
- * considerado uma margem de erro de 10pt
- * @param {type} value
- * @param {type} arr
- * @returns {Number|nearByDot.arr}
- */
-function nearByDot(value, arr) {
-    for (var i in arr) {
-        for (j = 0; j < 10; j++) {
-            if (!isNaN(arr[i])) {
-                if (Math.floor(arr[i]) == Math.floor(value) + j ||
-                        Math.floor(arr[i]) == Math.floor(value) - j) {
-                    return i;
-                }
-
-            }
-        }
-    }
-    return -1;
-}
-
-
-function procurarObjPorInterseccao(x, y) {
-    if (draws <= 0) {
-        return;
-    }
-
-    if (!x) {
-        x = coordAtual.x;
-    }
-
-    if (!y) {
-        y = coordAtual.y;
-    }
-
-    for (var i in draws) {
-        if (draws[i].matriz) {
-            if (nearByDot(x, draws[i].matriz[0]) !== -1 &&
-                    nearByDot(y, draws[i].matriz[1]) !== -1
-                    ) {
-                return draws[i];
-            }
-        }
-    }
-    return false;
-}
-
 
 function inicializarMemo(memo, minX, maxX, minY, maxY) {
     for (var i = minX; i < maxX; i++) {
@@ -180,6 +88,19 @@ function inicializarMemo(memo, minX, maxX, minY, maxY) {
     return memo;
 }
 
+/**
+ * Pega a posição atual do canvas
+ * @param {type} evt
+ * @returns {getMousePos.canvasAnonym$0}
+ */
+function getMousePos(evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: (evt.clientY - rect.bottom) * -1
+    };
+}
+
 
 function getObjOnjanela(matrizJanela) {
     var minX = Math.min.apply(null, matrizJanela[0]);
@@ -189,7 +110,7 @@ function getObjOnjanela(matrizJanela) {
 
     var memo = [[], []];
     inicializarMemo(memo, minX, maxX, minY, maxY);
-    //console.log(memo);
+
     var objNaJanela = [];
     var obj = false;
     for (var i = minX; i < maxX; i++) {
@@ -213,26 +134,9 @@ function getObjOnjanela(matrizJanela) {
 
 }
 
-function multiplyMatrices(m1, m2) {
-    var result = [];
-    try{
-        for (var i = 0; i < m1.length; i++) {
-            result[i] = [];
-            for (var j = 0; j < m2[0].length; j++) {
-                var sum = 0;
-                for (var k = 0; k < m1[0].length; k++) {
-                    sum += m1[i][k] * m2[k][j];
-                }
-                result[i][j] = sum;
-            }
-        }
-    } catch(err) {}
-    return result;
-}
 
-function desenha(result, tipo){
+function desenha(result, tipo) {
     if (tipo == "LINHA") {
-        //console.log("entrei");
         addDotToCanvas(result[0][0], result[1][0]);
         addDotToCanvas(result[0][1], result[1][1]);
 
@@ -245,7 +149,7 @@ function desenha(result, tipo){
         }).draw();
         draws.push(linha);
     }
-    
+
     if (tipo == "RETANGULO") {
         addDotToCanvas(result[0][0], result[1][0]);
         addDotToCanvas(result[0][2], result[1][2]);
@@ -261,29 +165,28 @@ function desenha(result, tipo){
     }
     resetPontos();
 
-    if(tipo == "TRIANGULO"){   
-        addDotToCanvas(result[0][0],result[1][0]);
-        addDotToCanvas(result[0][1],result[1][1]);
+    if (tipo == "TRIANGULO") {
+        addDotToCanvas(result[0][0], result[1][0]);
+        addDotToCanvas(result[0][1], result[1][1]);
 
         console.log(result[0][0]);
         console.log(result[1][0]);
-        
+
         var triangulo = new Triangle(
                 {
                     p1: pontos[1],
                     p0: pontos[0],
-                    
+
                 }).draw();
-        
+
         resetPontos();
-        
+
         draws.push(triangulo);
-        
+
 
     }
 
 }
-
 
 function addListners() {
 
@@ -292,7 +195,23 @@ function addListners() {
             alert("Selecione um desenho para calcular.");
             return;
         }
+
+        dX = document.getElementById("deslocDx").value;
+        if (!dX) {
+            alertProsseguir("o valor dX");
+            return;
+        }
+
+        dY = document.getElementById("deslocDy").value;
+        if (!dY) {
+            alertProsseguir("o valor dY");
+            return;
+        }
+
+        showLoadCursor();
         transladarObjetos(dX, dY, objSelecionado.matriz, objSelecionado.type);
+        showDefaultCursor();
+
         objSelecionado = undefined;
     });
 
@@ -301,7 +220,22 @@ function addListners() {
             alert("Selecione um desenho para calcular.");
             return;
         }
+
+        sX = document.getElementById("escalaSx").value;
+        if (!sX) {
+            alertProsseguir("o valor Sx");
+            return;
+        }
+
+        sY = document.getElementById("escalaSy").value;
+        if (!sY) {
+            alertProsseguir("o valor Sy");
+            return;
+        }
+
+        showLoadCursor();
         mEscala(sX, sY, objSelecionado.matriz, objSelecionado.type);
+        showDefaultCursor();
         objSelecionado = undefined;
     });
 
@@ -310,33 +244,40 @@ function addListners() {
             alert("Selecione um desenho para calcular.");
             return;
         }
-        rotacionarObjetos(graus, objSelecionado, objSelecionado.type);
+
+        graus = document.getElementById("grausRotacao").value;
+        if (!graus) {
+            alertProsseguir("o grau de rotação");
+            return;
+        }
+        showLoadCursor();
+        rotacionarObjetos(graus, objSelecionado.matriz, objSelecionado.type);
+        showDefaultCursor();
         objSelecionado = undefined;
     });
 
     btnCalcularZoomExtend.addEventListener("click", function (evt) {
-        //MUDAR PARA UM ALERT
+        $("#calcZoomExtend").html("Calcular");
         objAsjanela = true;
-        console.log("DESENHE UM RETANGULO E EM SEGUIDA CALCULE NOVAMENTE");
         setDrawType("RETANGULO", "tipoRetangulo");
-        
+
         if (janela != undefined) {
-            alert("BELEZA");
             var objNaJanela = [];
+            showLoadCursor();
             objNaJanela = getObjOnjanela(janela.matriz);
-            if(!objNaJanela){
-                objNaJanela = [];
+            if (!objNaJanela) {
+                return;
             }
-            //console.log(objNaJanela);
-            
+
             zoomExtend(janela.matriz, objNaJanela);
-            
+
             janela = undefined;
             objAsjanela = false;
             removeLastObj(true);//apenas redesenha o canvas sem a janela
-           
-
-            
+            showDefaultCursor();
+        } else {
+            alert("Crie a seleção do zoom para prosseguir!");
+            return;
         }
     });
 
@@ -569,6 +510,11 @@ function Triangle(props) {
     }
 }
 
+/**
+ * Função para desenho de linha
+ * @param {type} props
+ * @returns {Rectangle}
+ */
 function Rectangle(props) {
 
     this.obj = {};
@@ -633,6 +579,10 @@ function Rectangle(props) {
     }
 }
 
+/**
+ * Limpa a área do canvas
+ * @returns {undefined}
+ */
 function clearCanvas() {
     draws = [];
     pontos = [];
@@ -701,10 +651,6 @@ function Line(props) {
     this.obj.matriz.push([this.obj.posYO, this.obj.posYD]);
     this.obj.matriz.push([1, 1]);
 
-
-
-    //console.table(this.obj.matriz);
-
     this.draw = function () {
         ctx.beginPath();
         ctx.moveTo(this.obj.posXO, this.obj.posYO);
@@ -715,47 +661,6 @@ function Line(props) {
         return this.obj;
     }
 }
-
-function setObjSelected(obj, flagBack = false) {
-    var auxObj = obj;
-    var color = "red";
-    if (flagBack) {
-        color = "blue";
-    }
-    obj.graphics.clear();
-    obj.graphics.beginFill(color).drawCircle(
-            auxObj.posX,
-            auxObj.posY,
-            auxObj.radius);
-    stage.update();
-}
-
-var lastObj = null;
-function setLine(evt) {
-
-    if (lastObj == null) {
-        lastObj = evt.target;
-    }
-
-    var currentObj = evt.target;
-    setObjSelected(currentObj);
-
-
-    if (lastObj != null && currentObj != lastObj) {
-        var obj = new Line({
-            xO: lastObj.posX,
-            yO: lastObj.posY,
-            xD: currentObj.posX,
-            yD: currentObj.posY
-        }).draw();
-        setObjSelected(currentObj, true);
-        setObjSelected(lastObj, true);
-        lastObj = null;
-    }
-
-    stage.update();
-}
-
 
 function Circle(props) {
     this.obj = {};
@@ -781,4 +686,4 @@ function Circle(props) {
         return this.obj;
     }
 
-}   
+}

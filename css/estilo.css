@@ -17,6 +17,11 @@ ul li{
     border-radius: 5%;
     width: 110px;
     cursor: pointer;
+    font-size: 100%;
+}
+
+.btn.btn-zoom{
+    font-size: 78%;
 }
 
 .left-menu .btn-menu{
@@ -73,6 +78,17 @@ canvas {
 .ativo{
     background: #7DC265 !important;
     color: white;
+}
+
+.btn-tranformacao-ativa{
+    background-color: #007272;
+    color:white;
+}
+
+
+.ativo-zoom-calc{
+    background-color: #005500;
+    color:white;
 }
 
 .btn:hover{

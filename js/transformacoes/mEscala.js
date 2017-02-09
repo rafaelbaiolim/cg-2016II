@@ -1,6 +1,7 @@
-
 function mEscala(sx, sy, mObj, tipo) {
     var menores = pegaMenorPonto(mObj);
+    console.log(sx);
+    console.log(sy);
     
     var dx = menores.dx, dy = menores.dy;
 
@@ -12,7 +13,6 @@ function mEscala(sx, sy, mObj, tipo) {
     
     var result = multiplyMatrices(S, mObj);
    	clearCanvas();
-		
 	 
     desenha(result, tipo);
      
