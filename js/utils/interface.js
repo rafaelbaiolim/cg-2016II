@@ -30,12 +30,12 @@ $(document).ready(function () {
         btnExtend.removeClass(classBtnAtivo);
     }
 
-
     /**
      * 
      * @returns {undefined}
      */
     function ativarBotao(idBtn) {
+        ativarBtnDrawsType();
         removerBtnAtivo();
         $("#" + idBtn).addClass(classBtnAtivo);
     }
@@ -110,3 +110,35 @@ function showDefaultCursor() {
     $(".container").css("cursor", "default");
 }
 
+/**
+ * Desativa os botões de desenho para o zoom
+ * @returns {undefined}
+ */
+function desativarBtnDrawsType() {
+    $("#tipoLinha").prop("disabled", true);
+    $("#tipoRetangulo").prop("disabled", true);
+    $("#tipoTriangulo").prop("disabled", true);
+    var classAtivo = "ativo";
+
+    $("#tipoLinha").removeClass(classAtivo);
+    $("#tipoRetangulo").removeClass(classAtivo);
+    $("#tipoTriangulo").removeClass(classAtivo);
+
+    var classDisabled = "btn-disabled";
+    $("#tipoLinha").addClass(classDisabled);
+    $("#tipoRetangulo").addClass(classDisabled);
+    $("#tipoTriangulo").addClass(classDisabled);
+}
+
+function ativarBtnDrawsType() {
+    $("#tipoLinha").prop("disabled", false);
+    $("#tipoRetangulo").prop("disabled", false);
+    $("#tipoTriangulo").prop("disabled", false);
+
+    var classDisabled = "btn-disabled";
+    $("#tipoLinha").removeClass(classDisabled);
+    $("#tipoRetangulo").removeClass(classDisabled);
+    $("#tipoTriangulo").removeClass(classDisabled);
+
+
+}

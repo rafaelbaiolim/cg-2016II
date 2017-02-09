@@ -87,11 +87,25 @@ canvas {
 
 
 .ativo-zoom-calc{
-    background-color: #005500;
+    background-color: #1699C4;
     color:white;
 }
 
 .btn:hover{
     background-color: cadetblue;
     color:white;
+}
+
+.btn-disabled{
+    background-color: #BCC7BD;
+    border: #BCC7BD solid thin;
+    color:white;
+    cursor: default;
+}
+
+.btn-disabled:hover{
+    background-color: #BCC7BD;
+    border: #BCC7BD solid thin;
+    color:white;
+    cursor: default;
 }

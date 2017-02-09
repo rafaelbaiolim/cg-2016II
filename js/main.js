@@ -42,6 +42,9 @@ function setDrawType(drawTp, idElemento) {
         case "RETANGULO":
             drawType = "RETANGULO";
             break;
+        case "SELECAO":
+            drawType = "SELECAO";
+            break;
         case "CIRCULO":
             drawType = "CIRCULO";
             break;
@@ -49,10 +52,13 @@ function setDrawType(drawTp, idElemento) {
             drawType = "LINHA";
             break;
     }
-    removeActiveClass("tipoLinha");
-    removeActiveClass("tipoRetangulo");
-    removeActiveClass("tipoTriangulo");
-    document.getElementById(idElemento).className += " ativo";
+
+    if (idElemento) {
+        removeActiveClass("tipoLinha");
+        removeActiveClass("tipoRetangulo");
+        removeActiveClass("tipoTriangulo");
+        document.getElementById(idElemento).className += " ativo";
+    }
     resetPontos();
 }
 
@@ -256,12 +262,17 @@ function addListners() {
         objSelecionado = undefined;
     });
 
+    var firstClick = 0;
     btnCalcularZoomExtend.addEventListener("click", function (evt) {
         $("#calcZoomExtend").html("Calcular");
-        objAsjanela = true;
-        setDrawType("RETANGULO", "tipoRetangulo");
+        $("#calcZoomExtend").addClass("ativo-zoom-calc");
 
+        objAsjanela = true;
+        setDrawType("SELECAO", false);
+
+        desativarBtnDrawsType();
         if (janela != undefined) {
+            ativarBtnDrawsType();
             var objNaJanela = [];
             showLoadCursor();
             objNaJanela = getObjOnjanela(janela.matriz);
@@ -275,10 +286,21 @@ function addListners() {
             objAsjanela = false;
             removeLastObj(true);//apenas redesenha o canvas sem a janela
             showDefaultCursor();
+            firstClick = -1;
+            $("#calcZoomExtend").html("Criar Seleção");
+            $("#calcZoomExtend").removeClass("ativo-zoom-calc");
         } else {
-            alert("Crie a seleção do zoom para prosseguir!");
-            return;
+            if (firstClick > 0) {
+                alert("Crie a seleção do zoom para prosseguir!");
+                firstClick = 0;
+                desativarBtnDrawsType();
+            }
         }
+
+        firstClick++;
+
+        return;
+
     });
 
     canvas.addEventListener("mouseout", function () {
@@ -326,17 +348,29 @@ function addListners() {
                         {
                             p0: pontos[0],
                             p1: pontos[1],
+                            selecao: false
+
                         }).draw();
-                resetPontos();
-                if (objAsjanela) {
-                    janela = retangulo;
-                    resetPontos();
-                    return true;
-                }
+
                 resetPontos();
                 draws.push(retangulo);
             }
         }
+
+        if (drawType == "SELECAO") {
+            if (pontos.length >= 2) {
+                var retangulo = new Rectangle(
+                        {
+                            p0: pontos[0],
+                            p1: pontos[1],
+                            selecao: true
+                        }).draw();
+                janela = retangulo;
+                resetPontos();
+                return true;
+            }
+        }
+
 
         if (drawType == "TRIANGULO") {
             if (pontos.length >= 2) {
@@ -535,7 +569,9 @@ function Rectangle(props) {
         xO: props.p0.posX,
         yO: props.p0.posY,
         xD: props.p1.posX,
-        yD: props.p0.posY
+        yD: props.p0.posY,
+        selecao: props.selecao
+
     }).draw();
 
     this.obj.linhas.push(this.linha1);
@@ -545,7 +581,8 @@ function Rectangle(props) {
         xO: this.linha1.posXD,
         yO: this.linha1.posYD,
         xD: props.p1.posX,
-        yD: props.p1.posY
+        yD: props.p1.posY,
+        selecao: props.selecao
     }).draw();
     this.obj.linhas.push(this.linha2);
 
@@ -555,7 +592,8 @@ function Rectangle(props) {
         xO: props.p0.posX,
         yO: props.p0.posY,
         xD: props.p0.posX,
-        yD: props.p1.posY
+        yD: props.p1.posY,
+        selecao: props.selecao
     }).draw();
     this.obj.linhas.push(this.linha3);
 
@@ -564,7 +602,8 @@ function Rectangle(props) {
         xO: this.linha3.posXD,
         yO: this.linha3.posYD,
         xD: props.p1.posX,
-        yD: props.p1.posY
+        yD: props.p1.posY,
+        selecao: props.selecao
     }).draw();
     this.obj.linhas.push(this.linha4);
 
@@ -602,16 +641,13 @@ function addDotToCanvas(coordX, coordY, propFill) {
     if (!coordY) {
         coordY = coordAtual.y;
     }
-
     var ponto = new Circle({
         x: coordX,
         y: coordY,
         radius: 5,
         fill: propFill,
     }).draw();
-
     pontos.push(ponto);
-
 }
 
 
@@ -628,7 +664,6 @@ function Line(props) {
         if (props.drawDots) {
             addDotToCanvas(props.xO, props.yO, props.fill);
             addDotToCanvas(props.xD, props.yD, props.fill);
-
         }
 
         this.obj.posXO = props.xO;
@@ -646,18 +681,20 @@ function Line(props) {
         console.log(err);
     }
 
-
     this.obj.matriz.push([this.obj.posXO, this.obj.posXD]);
     this.obj.matriz.push([this.obj.posYO, this.obj.posYD]);
     this.obj.matriz.push([1, 1]);
 
     this.draw = function () {
         ctx.beginPath();
+        if (props.selecao && props.selecao != undefined) {
+            ctx.setLineDash([5, 6]);
+        } else {
+            ctx.setLineDash([0, 0]);
+        }
         ctx.moveTo(this.obj.posXO, this.obj.posYO);
         ctx.lineTo(this.obj.posXD, this.obj.posYD);
         ctx.stroke();
-
-
         return this.obj;
     }
 }
